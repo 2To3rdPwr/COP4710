@@ -1,0 +1,214 @@
+==================User Accounts=============================
+
++ Login Check +
+$sql = "SELECT `user`.`user_id`\n"
+    . "FROM `user`\n"
+    . "WHERE ((`user`.`email` = [email (unique String)]) AND (`user`.`password` = [password (String)]))";
+
++ Register New User +
+$sql = "INSERT INTO `user` (`user_id`, `attends_university`, `email`, `password`, `name`, `permission_level`) VALUES ([User ID (10-didgit Int)], [University ID (10-didgit Int)], [Email (Unique String)], [Password (String)], [Username (String)], 0)";
+
++ Edit Account Info +
+$sql = "UPDATE `user` SET `attends_university` = [University ID (10-didgit Int)], `email` = [Email (Unique String)], `password` = [Password (String)], `name` = [Username (String)] WHERE `user`.`user_id` = [User ID (10-didgit Int)]";
+
++ Delete Account +
+$sql = "DELETE FROM `user` WHERE user_id = [User ID (10-didgit Int)]";
+
++ Get Account Permission Level +
+$sql = "SELECT `user`.`permission_level`\n"
+    . "FROM `user`\n"
+    . "WHERE (`user`.`user_id` = [User ID (10-didgit Int)])";
+
+=================User Membership=============================
+
++ Check university of user +
+$sql = "SELECT `university`.`university_id` \n"
+    . "FROM `university`, `user` \n"
+    . "WHERE ((`university`.`university_id` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int PK)]))";
+
++ Check that a user is a member of a given RSO +
+$sql = "SELECT `rso`.`rso_id`\n"
+    . "FROM `rso`, `rso_membership`\n"
+    . "WHERE ((`rso`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int PK)]) AND (`rso`.`rso_id` = [RSO ID (10-didgit Int PK)]))";
+
++ Check if a user is an admin of a given RSO +
+$sql = "SELECT `rso`.`rso_id`\n"
+    . "FROM `rso`, `rso_membership`\n"
+    . "WHERE ((`rso`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]) AND (`rso`.`rso_id` = [RSO ID (10-didgit Int)]) AND (`rso_membership`.`admin` = 1))";
+
+=================Searches====================================
+*Note: Searches only return exact results*
+
+-----------------------Universities--------------------
+
++ Get All Universities +
+$sql = "SELECT `university`.* \n"
+    . "FROM `university`";
+
++ Search University by Name +
+$sql = "SELECT `university`.*\n"
+    . "FROM `university`\n"
+    . "WHERE (`university`.`name` = [University Name (String)])";
+
+---------------------RSOs------------------------------
+
++ Get All RSOs +
+$sql = "SELECT `rso`.*\n"
+    . "FROM `rso`";
+
++ Search RSO by name +
+$sql = "SELECT `rso`.*\n"
+    . "FROM `rso`\n"
+    . "WHERE (`rso`.`name` = [RSO Name (String)])";
+
++ RSOs by University Name +
+$sql = "SELECT `rso`.*\n"
+    . "FROM `rso`, `university`\n"
+    . "WHERE ((`rso`.`with_university` = university.university_id) AND (`university`.`name` = [University Name (String)]))";
+
++ RSOs by University ID +
+$sql = "SELECT `rso`.*\n"
+    . "FROM `rso`\n"
+    . "WHERE (`rso`.`with_university` = [University ID (String)])";
+
+-----------------------Events----------------------------------
+*All event queries respect user privalege levels, including no privalege*
+*In the case of a user that has not logged in, use an invalid user ID such as 0*
+
++ All Events +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`\n"
+    . "WHERE ((`event`.`approved` = 1) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))\n"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events by Name +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`name` = [EVENT NAME (String)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events by ID +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`event_id` = [Event ID (10-didgit Int)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events by University Name +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`, `university`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`at_university` = `university`.`university_id`) AND (`university`.`name` = [UNIVERSITY NAME (String)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events by University ID +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`at_university` = [University ID (10-didgit Int)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events by RSO Host Name +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`, `rso`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`event_id` = `host_event`.`event_id`) AND (`host_event`.`rso_id` = `rso`.`rso_id`) AND (`rso`.`name` = [RSO NAME (String)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
++ Events By RSO ID +
+$sql = "SELECT DISTINCT `event`.*\n"
+    . "FROM `event`, `user`, `host_event`, `rso_membership`\n"
+    . "WHERE ((`event`.`approved` = 1) AND (`event`.`event_id` = `host_event`.`event_id`) AND (`host_event`.`rso_id` = [RSO ID (10-didgit Int)]) AND ((`event`.`privacy` = 0) OR ((`event`.`privacy` = 1) AND (`event`.`at_university` = user.attends_university) AND (`user`.`user_id` = [User ID (10-didgit Int)])) OR ((`event`.`privacy` = 2) AND (`event`.`event_id` = host_event.event_id) AND (`host_event`.`rso_id` = rso_membership.rso_id) AND (`rso_membership`.`user_id` = [User ID (10-didgit Int)]))))"
+    . "ORDER BY `event`.`date` ASC";
+
+=================University Queries==========================
+*Events and RSOs by University ID are in Searches*
+
++ Add New University +
+$sql = "INSERT INTO `university` (`university_id`, `name`, `description`, `location`, `population`, `website`) VALUES ([University PK (10-didgit Int)], [Unique University Name (String)], [Description (String)], [Location Data (String)], [Population (Int)], [Website (String)])";
+
++ Edit University Info +
+$sql = "UPDATE `university` SET `name` = [Unique University Name (String)], `description` = [Description (String)], `location` = [Location Data (String)], `population` = [Population (Int)], `website` = [Website (String)] WHERE `university`.`university_id` = [University ID (10 didgit int PK)]";
+
++ Get info for a given university +
+$sql = "SELECT `university`.*\n"
+    . "FROM `university`\n"
+    . "WHERE (`university`.`university_id` = [University ID (10-didgit Int)])";
+
+=================RSO Queries=================================
+*Events by RSO ID is in Searches*
+
++ Create an RSO +   //Also sets the user as the admin of the RSO
+$sql = "INSERT INTO `rso` (`rso_id`, `with_university`, `name`, `description`, `membership`, `website`) VALUES ([RSO ID (10-didgit Int)], [University ID (10-didgit Int)], [University Name (String)], [Description (String)], [# of Members (Nullable Int)], [Website (String)])";
+$sql = "INSERT INTO `rso_membership` (`rso_id`, `user_id`, `admin`) VALUES ([RSO ID (10-didgit Int)], [User ID (10-didgit Int)], 1)";
+
++ Get info for a given RSO +
+$sql = "SELECT `rso`.*\n"
+    . "FROM `rso`\n"
+    . "WHERE (`rso`.`rso_id` = [RSO ID (10-didgit Int)])";
+
++ Get members of an RSO +
+$sql = "SELECT `user`.*\n"
+    . "FROM `user`, `rso_membership`\n"
+    . "WHERE ((`user`.`user_id` = rso_membership.user_id) AND (`rso_membership`.`rso_id` = [RSO ID (10-didgit Int)]))";
+
++ Add/Remove Admin Privilages +
+$sql = "UPDATE `rso_membership` SET `admin` = [0 to remove Admin, 1 to promote Admin] WHERE `rso_membership`.`rso_id` = [RSO ID (10-didgit Int)] AND `rso_membership`.`user_id` = [User ID (10-didgit Int)]";
+
++ Join an RSO +
+$sql = "INSERT INTO `rso_membership` (`rso_id`, `user_id`, `admin`) VALUES ([RSO ID (10-didgit Int)], [User ID (10-didgit Int)], 0)";
+
++ Remove Member from RSO +
+$sql = "DELETE FROM `rso_membership` WHERE rso_id = [RSO ID (10-didgit Int)] AND user_id = [User ID (10-didgit Int)]";
+
++ Edit RSO +
+$sql = "UPDATE `rso` SET `name` = [RSO Name (String)], `description` = [Description (String)], `membership` = [# of Members (Int)], `website` = [Website (String)] WHERE `rso`.`rso_id` = [RSO ID (10-didgit Int)]";
+
++ Delete RSO +
+$sql = "DELETE FROM `rso` WHERE rso_id = [RSO ID(10-didgit Int)]";
+
+================Event Queries==================================
+
++ Create New Event (Generic) +
+$sql = "INSERT INTO `event` (`event_id`, `at_university`, `name`, `location`, `description`, `date`, `start_time`, `end_time`, `privacy`, `approved`) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (Date)], [Start Time (Nullable Time)], [End Time (Nullable Time)], [Privacy (Int; 0=Public, 1=University Only)], 0)";
+
++ Create New Event (Through RSO) +
+$sql = "INSERT INTO `event` (`event_id`, `at_university`, `name`, `location`, `description`, `date`, `start_time`, `end_time`, `privacy`, `approved`) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (Date)], [Start Time (Nullable Time)], [End Time (Nullable Time)], [Privacy (Int; 0=Public, 1=University Only)], 1)";
+$sql = "INSERT INTO `host_event` (`event_id`, `rso_id`) VALUES ([Event ID (10-didgit Int)], [RSO ID (10-didgit Int)])";
+
++ Get info for a given event +
+$sql = "SELECT `event`.*\n"
+    . "FROM `event`\n"
+    . "WHERE (`event`.`event_id` = [Event ID (10-didgit Int)])";
+
++ Get Comments for Event +
+$sql = "SELECT `writes_comment_on`.*\n"
+    . "FROM `writes_comment_on`\n"
+    . "WHERE (`writes_comment_on`.`event_id` = [Event ID (10-didgit Int)])\n"
+    . "ORDER BY `writes_comment_on`.`date` DESC";
+
++ Get RSVP user IDs +
+$sql = "SELECT `event_attendence`.`user_id`\n"
+    . "FROM `event_attendence`\n"
+    . "WHERE (`event_attendence`.`event_id` = [Event ID (10-didgit Int)])";
+
++ Write a new comment +
+$sql = "INSERT INTO `writes_comment_on` (`comment_id`, `event_id`, `user_id`, `title`, `body`, `rating`, `date`) VALUES ([Comment ID (10-didgit Int)], [Event ID (10-didgit Int)], [User ID (10-didgit Int)], [Title (String)], [Body (String)], [Rating (Int 0-5)], CURRENT_TIMESTAMP)";
+
++ Delete Comment +
+$sql = "DELETE FROM `writes_comment_on` WHERE comment_id = [Comment ID (10-didgit Int)]";
+
++ User RSVPs for event +
+$sql = "INSERT INTO `event_attendence` (`event_id`, `user_id`) VALUES ([Event ID (10-didgit Int)], [User ID (10-didgit Int)])";
+
++ Show Unapproved Events +
+$sql = "SELECT `event`.*\n"
+    . "FROM `event`\n"
+    . "WHERE (`event`.`approved` = 0)";
+
++ Approve Event +
+$sql = "UPDATE `event` SET `approved` = 1 WHERE `event`.`event_id` = [Event ID (String)]";
+
++ Edit Event +
+$sql = "UPDATE `event` SET `name` = [Event Name (String)], `location` = [Location Data (String)], `description` = [Description (String)], `date` = [Date (Date)], `start_time` = [Start Time (Time)], `end_time` = [End Time (Time)] WHERE `event`.`event_id` = [Event ID (10-didgit Int)]";
+
++ Delete Event +      //Also use this for denying events
+$sql = "DELETE FROM `event` WHERE event_id = [Event ID (10-didgit Int)]";
+
+
