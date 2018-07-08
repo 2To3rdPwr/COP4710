@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 07, 2018 at 10:03 PM
+-- Generation Time: Jul 08, 2018 at 08:42 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `databasesclass`
 --
-CREATE DATABASE IF NOT EXISTS `databasesclass` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `databasesclass`;
 
 -- --------------------------------------------------------
 
@@ -33,7 +31,7 @@ USE `databasesclass`;
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE IF NOT EXISTS `event` (
   `event_id` int(10) NOT NULL,
-  `at_university` int(10) NOT NULL,
+  `university_id` int(10) NOT NULL,
   `name` tinytext NOT NULL,
   `location` text NOT NULL COMMENT 'Location Data stored as string for now',
   `description` text NOT NULL,
@@ -43,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `privacy` int(1) NOT NULL COMMENT '0 = public, 1 = university only, 2 = RSO only',
   `approved` tinyint(1) NOT NULL,
   PRIMARY KEY (`event_id`),
-  KEY `at_university` (`at_university`)
+  KEY `at_university` (`university_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -85,13 +83,13 @@ CREATE TABLE IF NOT EXISTS `host_event` (
 DROP TABLE IF EXISTS `rso`;
 CREATE TABLE IF NOT EXISTS `rso` (
   `rso_id` int(10) NOT NULL,
-  `with_university` int(10) NOT NULL,
+  `university_id` int(10) NOT NULL,
   `name` tinytext NOT NULL,
   `description` text NOT NULL,
   `membership` int(10) DEFAULT NULL,
   `website` tinytext,
   PRIMARY KEY (`rso_id`),
-  KEY `with_university` (`with_university`)
+  KEY `with_university` (`university_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -137,14 +135,14 @@ CREATE TABLE IF NOT EXISTS `university` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(10) NOT NULL,
-  `attends_university` int(10) NOT NULL,
+  `university_id` int(10) NOT NULL,
   `email` tinytext NOT NULL,
   `password` tinytext NOT NULL,
   `name` tinytext NOT NULL,
   `permission_level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = user. 1 = Super Admin',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`(50)),
-  KEY `attends_university` (`attends_university`)
+  KEY `attends_university` (`university_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='table for users with accounts';
 
 -- --------------------------------------------------------
@@ -175,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `writes_comment_on` (
 -- Constraints for table `event`
 --
 ALTER TABLE `event`
-  ADD CONSTRAINT `university_id` FOREIGN KEY (`at_university`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `university_id` FOREIGN KEY (`university_id`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `event_attendence`
@@ -195,7 +193,7 @@ ALTER TABLE `host_event`
 -- Constraints for table `rso`
 --
 ALTER TABLE `rso`
-  ADD CONSTRAINT `at_university` FOREIGN KEY (`with_university`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `at_university` FOREIGN KEY (`university_id`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `rso_membership`
@@ -208,7 +206,7 @@ ALTER TABLE `rso_membership`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_attends_university` FOREIGN KEY (`attends_university`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_attends_university` FOREIGN KEY (`university_id`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `writes_comment_on`
