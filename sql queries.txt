@@ -107,6 +107,15 @@ $sql = "UPDATE rso_membership SET admin = [0 to remove Admin, 1 to promote Admin
 + Join an RSO +
 $sql = "INSERT INTO rso_membership (rso_id, user_id, admin) VALUES ([RSO ID (10-didgit Int)], [User ID (10-didgit Int)], 0)";
 
++ Check the number of registered members of an RSO +
+$sql = "SELECT COUNT(*) From rso_membership Where rso_membership.rso_id = [RSO ID (10-didgit Int)]";
+
++ Update active status of rso (Call after adding member to RSO) +
+$sql = "UPDATE rso SET active = true WHERE (Select Count(*) From rso_membership WHERE rso_membership.rso_id = rso.rso_id) > 4";
+
++ Update active status of rso's (Call after removing member from RSO) +
+$sql = "UPDATE rso SET active = false WHERE (Select Count(*) From rso_membership WHERE rso_membership.rso_id = rso.rso_id) < 5";
+
 + Remove Member from RSO +
 $sql = "DELETE FROM rso_membership WHERE rso_id = [RSO ID (10-didgit Int)] AND user_id = [User ID (10-didgit Int)]";
 
@@ -119,10 +128,13 @@ $sql = "DELETE FROM rso WHERE rso_id = [RSO ID(10-didgit Int)]";
 ================Event Queries==================================
 
 + Create New Event (Generic) +
-$sql = "INSERT INTO event (event_id, university_id, name, location, description, date, start_time, end_time, privacy, approved) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (Date)], [Start Time (Nullable Time)], [End Time (Nullable Time)], [Privacy (Int; 0=Public, 1=University Only)], 0)";
+$sql = "INSERT INTO event (event_id, university_id, name, location, description, date, privacy, approved) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (DateTime)], [Privacy (Int; 0=Public, 1=University Only, 2=RSO Only)], 0)";
 
 + Create New Event (Through RSO) +
-$sql = "INSERT INTO event (event_id, university_id, name, location, description, date, start_time, end_time, privacy, approved) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (Date)], [Start Time (Nullable Time)], [End Time (Nullable Time)], [Privacy (Int; 0=Public, 1=University Only)], 1)";
+* First, Check if this is true *
+$sql = "SELECT rso.active FROM rso WHERE (rso.rso_id = 0)";
+* Then go through with these queries *
+$sql = "INSERT INTO event (event_id, university_id, name, location, description, date, start_time, end_time, privacy, approved) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (DateTime)], [Privacy (Int; 0=Public, 1=University Only, 2=RSO Only)], 1)";
 $sql = "INSERT INTO host_event (event_id, rso_id) VALUES ([Event ID (10-didgit Int)], [RSO ID (10-didgit Int)])";
 
 + Get info for a given event +
