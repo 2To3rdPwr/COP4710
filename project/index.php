@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,11 +23,21 @@
     <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
-    <link href="css/grayscale.min.css" rel="stylesheet">
+    <link href="css/indexpage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
     <style>
+.intro-body
+{
+        position:relative;
+	   z-index:2;
+        margin: auto;
+        padding: 20px;
+        width: 80%;
+        height: 1000px;
+          padding-top: 100px;
 
+}
     </style>
       
 
@@ -33,18 +47,18 @@
   <body id="page-top">
       
 <?php
-include_once 'includes/dbh.inc.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['login'])) { //user logging in
 
-        require 'login.php';
+        require 'includes/login.inc.php';
         
     }
     
     elseif (isset($_POST['register'])) { //user registering
         
-        require 'includes/signup2.inc.php';
+        require 'includes/register.inc.php';
         
     }
 }
@@ -76,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
     </header>
       
-            <div class="intro-body">
+    <div class="intro-body">
         <div class="container">
           <div class="row">
             <div class="col-lg-8 mx-auto">
@@ -90,15 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div id="login">   
                         <h1>Welcome Back!</h1>
 
-                        <form action="/" method="post">
+                        <form action="includes/login.inc.php" method="post">
                             <div class="field-wrap">
-                                <label>Username<span class="req"></span></label>
-                                <input type="email"required autocomplete="off"/>
+                                <label>E-mail<span class="req"></span></label>
+                                <input type="email" name ="email" required autocomplete="off"/>
                             </div>
 
                             <div class="field-wrap">
                                 <label>Password<span class="req"></span></label>
-                                <input type="password"required autocomplete="off"/>
+                                <input type="password" name = "password" required autocomplete="off"/>
                             </div>
 
                             <p class="forgot"><a href="#">Forgot Password?</a></p>
@@ -110,18 +124,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div id="signup">   
                           <h1>Sign Up for Free</h1>
 
-                          <form action="" method="POST">
+                          <form action="includes/register.inc.php" method="POST">
                               <div class="top-row">
                                 <div class="field-wrap">
                                   <label>
-                                    First Name<span class="req">*</span>
+                                    First Name<span class="req"></span>
                                   </label>
                                   <input type="text" required autocomplete="off" name="firstname" />
                                 </div>
 
                                 <div class="field-wrap">
                                   <label>
-                                    Last Name<span class="req">*</span>
+                                    Last Name<span class="req"></span>
                                   </label>
                                   <input type="text"required autocomplete="off" name ="lastname"/>
                                 </div>
@@ -129,17 +143,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
                               <div class="field-wrap">
                                 <label>
-                                  Email Address<span class="req">*</span>
+                                  Email Address<span class="req"></span>
                                 </label>
                                 <input type="email"required autocomplete="off"/ name ="email">
                               </div>                              
 
                               <div class="field-wrap">
                                 <label>
-                                  Password<span class="req">*</span>
+                                  Password<span class="req"></span>
                                 </label>
                                 <input type="password"required autocomplete="off" name="password"/>
                               </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
 
                               <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
                           </form>
@@ -153,68 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         </div>
       </div>
 
-    <!-- About Section
-    <section id="about" class="content-section text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h2>About Grayscale</h2>
-            <p>Grayscale is a free Bootstrap theme created by Start Bootstrap. It can be yours right now, simply download the template on
-              <a href="http://startbootstrap.com/template-overviews/grayscale/">the preview page</a>. The theme is open source, and you can use it for any purpose, personal or commercial.</p>
-            <p>This theme features stock photos by
-              <a href="http://gratisography.com/">Gratisography</a>
-              along with a custom Google Maps skin courtesy of
-              <a href="http://snazzymaps.com/">Snazzy Maps</a>.</p>
-            <p>Grayscale includes full HTML, CSS, and custom JavaScript files along with SASS and LESS files for easy customization!</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Download Section 
-    <section id="download" class="download-section content-section text-center">
-      <div class="container">
-        <div class="col-lg-8 mx-auto">
-          <h2>Download Grayscale</h2>
-          <p>You can download Grayscale for free on the preview page at Start Bootstrap.</p>
-          <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg">Visit Download Page</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section 
-    <section id="contact" class="content-section text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h2>Contact Start Bootstrap</h2>
-            <p>Feel free to leave us a comment on the
-              <a href="http://startbootstrap.com/template-overviews/grayscale/">Grayscale template overview page</a>
-              on Start Bootstrap to give some feedback about this theme!</p>
-            <ul class="list-inline banner-social-buttons">
-              <li class="list-inline-item">
-                <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg">
-                  <i class="fa fa-twitter fa-fw"></i>
-                  <span class="network-name">Twitter</span>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="https://github.com/BlackrockDigital/startbootstrap" class="btn btn-default btn-lg">
-                  <i class="fa fa-github fa-fw"></i>
-                  <span class="network-name">Github</span>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="https://plus.google.com/+Startbootstrap/posts" class="btn btn-default btn-lg">
-                  <i class="fa fa-google-plus fa-fw"></i>
-                  <span class="network-name">Google+</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section> 
 
     <!-- Map Section 
     <div id="map"></div>

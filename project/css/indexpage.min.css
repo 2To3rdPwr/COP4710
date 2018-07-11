@@ -49,7 +49,25 @@ a:focus,a:hover
 {
     text-decoration:none;
     color:#1d9b6c
-}#mainNav{font-family:Cabin,'Helvetica Neue',Helvetica,Arial,sans-serif;margin-bottom:0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.3);background-color:#000}#mainNav .navbar-toggler{font-size:14px;padding:11px;color:#fff;border:1px solid #fff}#mainNav .navbar-brand{font-weight:700}#mainNav a{color:#fff}#mainNav .navbar-nav .nav-item{-webkit-transition:background .3s ease-in-out;-moz-transition:background .3s ease-in-out;transition:background .3s ease-in-out}#mainNav .navbar-nav .nav-item:hover{color:fade(white,80%);outline:0;background-color:transparent}#mainNav .navbar-nav .nav-item:active,#mainNav .navbar-nav .nav-item:focus{outline:0;background-color:transparent}@media (min-width:992px){#mainNav{padding-top:20px;padding-bottom:20px;-webkit-transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;-moz-transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;letter-spacing:1px;border-bottom:none;background:0 0}#mainNav.navbar-shrink{padding-top:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.3);background:#000}#mainNav .nav-link.active{outline:0;background-color:rgba(255,255,255,.3)}#mainNav .nav-link.active:hover{color:#fff}}
+}
+
+#mainNav{font-family:Cabin,'Helvetica Neue',Helvetica,Arial,sans-serif;margin-bottom:0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.3);background-color:#000}
+
+#mainNav .navbar-toggler{font-size:14px;padding:11px;color:#fff;border:1px solid #fff}
+
+#mainNav .navbar-brand{font-weight:700}
+
+#mainNav a{color:#fff}
+
+#mainNav .navbar-nav .nav-item{-webkit-transition:background .3s ease-in-out;-moz-transition:background .3s ease-in-out;transition:background .3s ease-in-out}
+
+#mainNav .navbar-nav .nav-item:hover{color:fade(white,80%);outline:0;background-color:transparent}
+
+#mainNav .navbar-nav .nav-item:active,#mainNav .navbar-nav .nav-item:focus{outline:0;background-color:transparent}
+
+@media (min-width:992px){#mainNav{padding-top:20px;padding-bottom:20px;-webkit-transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;-moz-transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;transition:background .3s ease-in-out,padding-top .3s ease-in-out,padding-bottom .3s;letter-spacing:1px;border-bottom:none;background:0 0}
+    
+    #mainNav.navbar-shrink{padding-top:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.3);background:#000}#mainNav .nav-link.active{outline:0;background-color:rgba(255,255,255,.3)}#mainNav .nav-link.active:hover{color:#fff}}
 
         .masthead{
     	position:absolute;
@@ -64,7 +82,7 @@ a:focus,a:hover
     padding:200px 0;
     text-align:center;
     color:#fff;
-    background:url(../img/practice1.jpg) no-repeat bottom center scroll;
+    background:url(../img/practice.jpg) no-repeat bottom center scroll;
     background-color:black;
     -webkit-background-size:cover;
     -moz-background-size:cover;

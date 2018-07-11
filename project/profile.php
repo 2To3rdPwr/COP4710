@@ -1,8 +1,10 @@
 <?php
     session_start();
     if(!isset($_SESSION['u_id'])){
+        
        header("Location: index.php");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +98,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="homepage.html">Event Manager</a>
+        <a class="navbar-brand js-scroll-trigger" href="homepage.php">Event Manager</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
@@ -107,7 +109,7 @@
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="profile.html">Profile</a>
+              <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="includes/logout.inc.php">LogOut</a>
@@ -130,6 +132,13 @@
               </div>
               <div class="eventfeed">
 
+                <p> Name: 
+                <br>
+                    E-mail Address: 
+                <br>
+                    University:
+                <br>
+                  </p>
               </div>
           </div>
             
