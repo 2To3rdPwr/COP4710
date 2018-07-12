@@ -1,10 +1,9 @@
 <?php
+    include 'includes/function.php';
     session_start();
     if(!isset($_SESSION['u_id'])){
-        
        header("Location: index.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -58,17 +57,19 @@
         {
             width: 100%;
             height:auto;
+            background-color: aquamarine;
         }
         .eventfeed
         {
             height:auto;
-            width: auto;
+            width: 50%;
             overflow:auto;
+            background-color: red;
         }
         
         .practicecontainer3
         {
-        float: right;
+        float:none;
         padding: 20px;
         width: 50%;
             height: 435px;
@@ -82,6 +83,12 @@
         width: 50%;
             height: 435px;
         background-color: purple;
+        }
+        .university-list
+        {
+
+            margin: 0 auto;
+            text-align: center;
         }
         
 
@@ -108,7 +115,7 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
-                          <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="university.php">University</a>
             </li>
             <li class="nav-item">
@@ -131,17 +138,14 @@
 
           <div class="event">
               <div class ="eventheader">
-                    <h1 style = "color: white">Profile</h1>
+                    <h1 style = "color: white">List of Universities</h1>
               </div>
               <div class="eventfeed">
 
-                <p> Name: 
-                <br>
-                    E-mail Address: 
-                <br>
-                    University:
-                <br>
-                  </p>
+    <?php
+                  listUniversities();
+                  ?>
+
               </div>
           </div>
             

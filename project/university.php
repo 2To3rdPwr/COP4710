@@ -1,10 +1,9 @@
 <?php
+    include 'includes/function.php';
     session_start();
     if(!isset($_SESSION['u_id'])){
-        
        header("Location: index.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -28,10 +27,23 @@
     <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
-    <link href="css/homepage.min.css" rel="stylesheet">
+    <link href="css/university.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
     <style>
+        ::-webkit-scrollbar
+        {
+            border-radius: 10px;
+            width: 15px;
+            background-color:rgba(77,77,77,0.75);
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius:10px;
+            background-color:rgba(255,255,255,0.15);
+        }
+
+        
         .practicecontainer
         {
         position:relative;
@@ -41,8 +53,47 @@
         width: 80%;
         height: 1000px;
           padding-top: 100px;
+           /* background-color: blue;*/
 
             
+        }
+                .university-feed
+        {
+            float: left;
+        padding: 20px;
+        width: 50%;
+        height: 100%;
+                            background-color: rgba(77,77,77,0.75);
+        border-radius:25px;
+            overflow: auto;
+
+
+            
+        }
+        .university-profile
+        {
+                      float: right;
+        position:relative;
+	       z-index:2;
+        margin: auto;
+        padding: 20px;
+        width: 50%;
+        height: 50%;
+          padding-top: 100px;
+            background-color: orange;  
+        }
+        
+                .rso
+        {
+                      float: right;
+        position:relative;
+	       z-index:2;
+        margin: auto;
+        padding: 20px;
+        width: 50%;
+        height: 50%;
+          padding-top: 100px;
+            background-color: purple;  
         }
         .event
         {
@@ -50,38 +101,84 @@
         padding: 20px;
         width: 100%;
         height:800px;
-
-                    background-color: rgba(77,77,77,0.75);
+        background-color: rgba(77,77,77,0.75);
         border-radius:25px;
+            overflow: auto;
         }
         .eventheader
         {
             width: 100%;
             height:auto;
+            /*background-color: aquamarine*/
         }
         .eventfeed
         {
             height:auto;
             width: auto;
-            overflow:auto;
+            overflow: auto;
+            border: solid black;
+            border-radius: 25px;
+            margin-bottom: 5px;
+            
+            
+            /*background-color:white;*/
+        }
+
+        .date
+        {
+            float: left;
+            width: 15%;
+            height: 150px;
+            /*background-color: black;*/
+            padding-top: 30px;
+        }
+        .information
+        {
+            float: right;
+            width: 85%;
+            height: auto;
+            /*background-color:cyan;*/
         }
         
-        .practicecontainer3
+        .headerfont
         {
-        float: right;
-        padding: 20px;
-        width: 50%;
-            height: 435px;
-        background-color: black;
+            font-family:Cabin,'Helvetica Neue',Helvetica,Arial,sans-serif;
+            font-weight:700;
+            letter-spacing:1px;
+            text-transform:uppercase;
+            padding:7px;
+
         }
-        
-        .practicecontainer4
+        .day
         {
-        float: right;
-        padding: 20px;
-        width: 50%;
-            height: 435px;
-        background-color: purple;
+            margin-bottom: -5px;
+        }
+        .eventname
+        {
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            margin-bottom: 5px;
+        }
+        .eventlocation
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .eventdescription
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .time
+        {
+            color: black;
+            margin-bottom: 5px;
+        }
+        .icons
+        {
+            padding-right: 5px;
         }
         
 
@@ -128,23 +225,26 @@
     </header>
     
     <div class="practicecontainer">
+        <div class="university-feed">
+            <div class="eventheader">
+                <h1>University Events</h1>
+            </div>
 
-          <div class="event">
-              <div class ="eventheader">
-                    <h1 style = "color: white">Profile</h1>
-              </div>
-              <div class="eventfeed">
-
-                <p> Name: 
-                <br>
-                    E-mail Address: 
-                <br>
-                    University:
-                <br>
-                  </p>
-              </div>
-          </div>
+ 
             
+            <?php
+                getFormattedEvent('1');
+            ?>
+        
+        </div>
+        
+        <div class ="university-profile">
+        
+        </div>
+        
+        <div class ="rso">
+        
+        </div>
 
     </div>
 
