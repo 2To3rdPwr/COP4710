@@ -62,7 +62,7 @@ if(isset($_POST['register']))
                         $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
                         
                         
-                        $sql = "INSERT INTO user (firstname, lastname, email, password) VALUES ('$first', '$last', '$email', '$hashedpassword');";
+						$sql = "INSERT INTO `user` (user_id, university_id, email, password, firstname, lastname, permission_level) VALUES (NULL, 3, '$email', '$hashedpassword', '$first', '$last', 0)";
                         
                         mysqli_query($conn, $sql);
                         header("Location: ../index.php?signup=success");
