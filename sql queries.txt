@@ -132,7 +132,7 @@ $sql = "INSERT INTO event (event_id, university_id, name, location, description,
 
 + Create New Event (Through RSO) +
 * First, Check if this is true *
-$sql = "SELECT rso.active FROM rso WHERE (rso.rso_id = 0)";
+$sql = "SELECT rso.active FROM rso WHERE (rso.rso_id = [rso_ID])";
 * Then go through with these queries *
 $sql = "INSERT INTO event (event_id, university_id, name, location, description, date, start_time, end_time, privacy, approved) VALUES ([Event ID (10-didgit Int)], [University ID (10-didgit Int)], [Event Name (String)], [Location Data (String)], [Description (String)], [Date (DateTime)], [Privacy (Int; 0=Public, 1=University Only, 2=RSO Only)], 1)";
 $sql = "INSERT INTO host_event (event_id, rso_id) VALUES ([Event ID (10-didgit Int)], [RSO ID (10-didgit Int)])";
@@ -151,6 +151,9 @@ $sql = "INSERT INTO writes_comment_on (comment_id, event_id, user_id, title, bod
 
 + Delete Comment +
 $sql = "DELETE FROM writes_comment_on WHERE comment_id = [Comment ID (10-didgit Int)]";
+
++ Get Average Rating +
+$sql = "SELECT AVG(rating) From writes_comment_on WHERE event_id = 1";
 
 + User RSVPs for event +
 $sql = "INSERT INTO event_attendence (event_id, user_id) VALUES ([Event ID (10-didgit Int)], [User ID (10-didgit Int)])";

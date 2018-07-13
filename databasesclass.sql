@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 11, 2018 at 08:11 PM
+-- Generation Time: Jul 13, 2018 at 11:52 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   PRIMARY KEY (`event_id`),
   UNIQUE KEY `no_two_same_time_place` (`location`(50),`date`),
   KEY `at_university` (`university_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `rso` (
   `website` tinytext,
   PRIMARY KEY (`rso_id`),
   KEY `with_university` (`university_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -124,15 +124,7 @@ CREATE TABLE IF NOT EXISTS `university` (
   `website` tinytext,
   PRIMARY KEY (`university_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `university`
---
-
-INSERT INTO `university` (`university_id`, `name`, `description`, `location`, `population`, `website`) VALUES
-(1, 'University of Central Florida', 'Best College', 'Here', 5, NULL),
-(2, 'USFf', 'We\'re not as cool as UCF.', 'yeeeee', 1, 'e');
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -143,23 +135,16 @@ INSERT INTO `university` (`university_id`, `name`, `description`, `location`, `p
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(10) NOT NULL AUTO_INCREMENT,
-  `university_id` int(10) NOT NULL,
+  `university_id` int(10) NOT NULL DEFAULT '3',
   `email` tinytext NOT NULL,
   `password` tinytext NOT NULL,
-  `name` tinytext NOT NULL,
+  `firstname` tinytext NOT NULL,
+  `lastname` tinytext NOT NULL,
   `permission_level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = user. 1 = Super Admin',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`(50)),
   KEY `attends_university` (`university_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='table for users with accounts';
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`user_id`, `university_id`, `email`, `password`, `name`, `permission_level`) VALUES
-(1, 1, 'e.mail@email.mail', '12345', 'Joseph Test', 0),
-(2, 1, 'email@e.mail', '23456', 'Jonny Test', 0);
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='table for users with accounts';
 
 -- --------------------------------------------------------
 
@@ -179,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `writes_comment_on` (
   PRIMARY KEY (`comment_id`),
   KEY `event_id` (`event_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Comments users write on events';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='Comments users write on events';
 
 --
 -- Constraints for dumped tables
