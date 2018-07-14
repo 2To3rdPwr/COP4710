@@ -3,6 +3,26 @@
     if(!isset($_SESSION['u_id'])){
         
        header("Location: index.php");
+	   
+	   $userID = $_SESSION['u_id'];
+	   //get user info
+	   $userUniv;
+	   $userEmail;
+	   $userFirst;
+	   $userLast;
+	   $superAdminStatus;
+	   
+	   $sql = "SELECT user* FROM user WHERE (user.user_id = $userID)";
+	   $result = mysqli_query($conn, $sql);
+	   
+	   while($row = mysqli_fetch_assoc($result))
+	   {
+		   $userFirst = "HODOR";//$row["firstname"];
+		   $userLast = $row["lastName"];
+		   $userUniv = $row["university_id"];
+		   $userEmail = $row["email"];
+		   $superAdminStatus = $row["permission_level"];
+	   }
 }
 
 ?>
@@ -134,14 +154,33 @@
                     <h1 style = "color: white">Profile</h1>
               </div>
               <div class="eventfeed">
-
-                <p> Name: 
-                <br>
-                    E-mail Address: 
-                <br>
-                    University:
-                <br>
-                  </p>
+				<?php
+				include 'includes/dbh.inc.php';
+					$userID = $_SESSION['u_id'];
+					//get user info
+					$userUniv;
+					$userEmail;
+					$userFirst;
+					$userLast;
+					$superAdminStatus;
+	   
+					$sql = "SELECT user.* FROM user WHERE (user.user_id = $userID)";
+					$result = mysqli_query($conn, $sql);
+					echo("Error description: " . mysqli_error($conn));
+					while($row = mysqli_fetch_assoc($result))
+					{
+						$userFirst = $row["firstname"];
+						$userLast = $row["lastname"];
+						$userUniv = $row["university_id"];
+						$userEmail = $row["email"];
+						$superAdminStatus = $row["permission_level"];
+					}
+					$sql = "SELECT university.name FROM university WHERE (university.university_id = $userUniv)";
+					$result = mysqli_query($conn, $sql);
+					while($row = mysqli_fetch_assoc($result))
+						$userUniv = $row["name"];
+					echo "<p> Name: ".$userFirst." ".$userLast."<br>E-mail Address: ".$userEmail."<br>University: ".$userUniv."<br></p>";
+				?>
               </div>
           </div>
             
