@@ -59,6 +59,7 @@
         {
             width: 100%;
             height:auto;
+			background-color: aquamarine;
         }
         .eventfeed
         {
@@ -109,6 +110,9 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
+			<li class="nav-item"> 
+				<a class="nav-link js-scroll-trigger" href="universitylist.php">University</a> 
+			</li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
             </li>
@@ -215,4 +219,3 @@
   </body>
 
 </html>
-
