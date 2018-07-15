@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 15, 2018 at 05:47 PM
+-- Generation Time: Jul 15, 2018 at 06:51 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -25,6 +25,41 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `attendence`
+--
+
+DROP TABLE IF EXISTS `attendence`;
+CREATE TABLE IF NOT EXISTS `attendence` (
+  `user_id` int(10) NOT NULL,
+  `event_id` int(10) NOT NULL,
+  UNIQUE KEY `no_duplicates` (`user_id`,`event_id`),
+  KEY `user_id` (`user_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment`
+--
+
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE IF NOT EXISTS `comment` (
+  `comment_id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `event_id` int(10) NOT NULL,
+  `rating` int(1) NOT NULL COMMENT '0-5 stars',
+  `title` tinytext NOT NULL,
+  `body` text NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`),
+  KEY `user_id` (`user_id`),
+  KEY `event_id` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `event`
 --
 
@@ -36,11 +71,11 @@ CREATE TABLE IF NOT EXISTS `event` (
   `location` text NOT NULL COMMENT 'Location Data stored as string for now',
   `description` text NOT NULL,
   `date` date NOT NULL,
-  `rso_id` int(1) DEFAULT NULL COMMENT '0 = public, 1 = university only, 2 = RSO only',
+  `rso_id` int(10) DEFAULT NULL COMMENT '0 = public, 1 = university only, 2 = RSO only',
   `approved` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`event_id`,`university_id`),
   KEY `FK_University_ID` (`university_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `event`
@@ -70,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `rso` (
   `website` tinytext,
   `active` int(1) DEFAULT '0',
   PRIMARY KEY (`rso_id`,`university_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rso`
@@ -98,16 +133,16 @@ CREATE TABLE IF NOT EXISTS `rso_membership` (
   PRIMARY KEY (`rso_id`,`user_id`),
   KEY `user_id` (`user_id`),
   KEY `member_of_rso` (`rso_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `rso_membership`
 --
 
 INSERT INTO `rso_membership` (`rso_id`, `user_id`, `admin`) VALUES
-(10, 1, 1),
 (1, 1, 1),
-(2, 1, 1);
+(2, 1, 1),
+(10, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -125,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `university` (
   `website` tinytext,
   PRIMARY KEY (`university_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `university`
@@ -154,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`(50)),
   KEY `attends_university` (`university_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
@@ -165,6 +200,30 @@ INSERT INTO `user` (`user_id`, `university_id`, `email`, `password`, `firstname`
 (2, NULL, 'kerryhuang@comcast.net', '$2y$10$LahGVf.BRa4RcAT4j2BzA.8./Ln3.rAaD9fKjWJuSj6LtqDv.xZtm', 'Kerry', 'Huang', 0),
 (3, NULL, 'monicasung2@comcast.net', '$2y$10$xel.3BoRzw3Pt0KqN3H7SeuByXZMVK6pMmt1U26LraxRXVKeyVu.a', 'Monica', 'Sung', 0),
 (4, 1, 'brianhuang065@gmail.com', '$2y$10$Og/dX66ei1jMcfbMoHtPYO2kYoPeJaywpqBEe4H8Cu/ZBf3URFMTy', 'Brian', 'Huang', 0);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `attendence`
+--
+ALTER TABLE `attendence`
+  ADD CONSTRAINT `attendence_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `attendence_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `comment`
+--
+ALTER TABLE `comment`
+  ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `event_ibfk_1` FOREIGN KEY (`university_id`) REFERENCES `university` (`university_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
