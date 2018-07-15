@@ -1,28 +1,7 @@
 <?php
     session_start();
     if(!isset($_SESSION['u_id'])){
-        
        header("Location: index.php");
-	   
-	   $userID = $_SESSION['u_id'];
-	   //get user info
-	   $userUniv;
-	   $userEmail;
-	   $userFirst;
-	   $userLast;
-	   $superAdminStatus;
-	   
-	   $sql = "SELECT user* FROM user WHERE (user.user_id = $userID)";
-	   $result = mysqli_query($conn, $sql);
-	   
-	   while($row = mysqli_fetch_assoc($result))
-	   {
-		   $userFirst = "HODOR";//$row["firstname"];
-		   $userLast = $row["lastName"];
-		   $userUniv = $row["university_id"];
-		   $userEmail = $row["email"];
-		   $superAdminStatus = $row["permission_level"];
-	   }
 }
 
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 13, 2018 at 11:52 PM
+-- Generation Time: Jul 15, 2018 at 04:57 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -85,7 +85,6 @@ CREATE TABLE IF NOT EXISTS `rso` (
   `university_id` int(10) NOT NULL,
   `name` tinytext NOT NULL,
   `description` text NOT NULL,
-  `membership` int(10) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `website` tinytext,
   PRIMARY KEY (`rso_id`),
