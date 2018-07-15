@@ -48,6 +48,8 @@ if(isset($_POST['login']))
                     $_SESSION['first'] =$row['firstname'];
                     $_SESSION['last'] =$row['lastname'];
                     $_SESSION['email'] =$row['email'];
+                    $_SESSION['privilege'] = $row['permission_level'];
+                    $_SESSION['university_id']=$row['university_id'];
                     
                     header("Location: ../homepage.php?login=success");
                     exit();

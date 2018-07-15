@@ -1,6 +1,8 @@
 <?php
+
     session_start();
     if(!isset($_SESSION['u_id'])){
+        
        header("Location: index.php");
 }
 
@@ -31,6 +33,18 @@
     <link href="css/login.css" rel="stylesheet">
       
     <style>
+                ::-webkit-scrollbar
+        {
+            border-radius: 10px;
+            width: 15px;
+            background-color:rgba(77,77,77,0.75);
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius:10px;
+            background-color:rgba(255,255,255,0.15);
+        }
+
         .practicecontainer
         {
         position:relative;
@@ -108,7 +122,7 @@
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
                           <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="university.php">University</a>
+              <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
@@ -128,41 +142,21 @@
     
     <div class="practicecontainer">
 
-          <div class="event">
-              <div class ="eventheader">
-                    <h1 style = "color: white">Profile</h1>
-              </div>
-              <div class="eventfeed">
-				<?php
-				include 'includes/dbh.inc.php';
-					$userID = $_SESSION['u_id'];
-					//get user info
-					$userUniv;
-					$userEmail;
-					$userFirst;
-					$userLast;
-					$superAdminStatus;
-	   
-					$sql = "SELECT user.* FROM user WHERE (user.user_id = $userID)";
-					$result = mysqli_query($conn, $sql);
-					echo("Error description: " . mysqli_error($conn));
-					while($row = mysqli_fetch_assoc($result))
-					{
-						$userFirst = $row["firstname"];
-						$userLast = $row["lastname"];
-						$userUniv = $row["university_id"];
-						$userEmail = $row["email"];
-						$superAdminStatus = $row["permission_level"];
-					}
-					$sql = "SELECT university.name FROM university WHERE (university.university_id = $userUniv)";
-					$result = mysqli_query($conn, $sql);
-					while($row = mysqli_fetch_assoc($result))
-						$userUniv = $row["name"];
-					echo "<p> Name: ".$userFirst." ".$userLast."<br>E-mail Address: ".$userEmail."<br>University: ".$userUniv."<br></p>";
-				?>
-              </div>
-          </div>
+        <div class="event">
+            <div class ="eventheader">
+                <h1 style = "color: white">Profile</h1>
+            </div>
             
+            <div class="eventfeed">
+                <?php
+                    include 'includes/function.php';
+                    $user_id = $_SESSION['u_id'];
+                    getProfilePage($user_id);
+                ?>
+
+            </div>
+        </div>
+
 
     </div>
 

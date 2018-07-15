@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    include 'includes/function.php';
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +27,18 @@
     <link href="css/login.css" rel="stylesheet">
       
     <style>
+                ::-webkit-scrollbar
+        {
+            border-radius: 10px;
+            width: 15px;
+            background-color:rgba(77,77,77,0.75);
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius:10px;
+            background-color:rgba(255,255,255,0.15);
+        }
+
 .intro-body
 {
         position:relative;
@@ -38,6 +50,18 @@
           padding-top: 100px;
 
 }
+        .dropdown
+        {
+          font-size:22px;
+          width:100%;
+          height:100%;
+          padding:5px 10px;
+          background-color:rgba(128,128,128,0.75);
+          color: white;
+          border-radius:25px;
+          border-color:(128,128,128,0.75);
+        }
+        
     </style>
       
 
@@ -92,89 +116,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       
     <div class="intro-body">
         <div class="container">
-          <div class="row">
-            <div class="col-lg-8 mx-auto">
-              <div class="form">
-                <ul class="tab-group">
-                    <li class="tab active"><a href="#login">Log In</a></li>
-                    <li class="tab"><a href="#signup">Sign Up</a></li>
-                </ul>
-                  
-                <div class="tab-content">
-                    <div id="login">   
-                        <h1>Welcome Back!</h1>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="form">
+                        <ul class="tab-group">
+                        <li class="tab active"><a href="#login">Log In</a></li>
+                        <li class="tab"><a href="#signup">Sign Up</a></li>
+                        </ul>
 
-                        <form action="includes/login.inc.php" method="post">
-                            <div class="field-wrap">
-                                <label>E-mail<span class="req"></span></label>
-                                <input type="email" name ="email" required autocomplete="off"/>
-                            </div>
+                        <div class="tab-content">
+                            <div id="login">   
+                                <h1>Welcome Back!</h1>
 
-                            <div class="field-wrap">
-                                <label>Password<span class="req"></span></label>
-                                <input type="password" name = "password" required autocomplete="off"/>
-                            </div>
+                                <form action="includes/login.inc.php" method="post">
+                                    <div class="field-wrap">
+                                        <label>E-mail<span class="req"></span></label>
+                                        <input type="email" name ="email" required autocomplete="off"/>
+                                    </div>
 
-                            <p class="forgot"><a href="#">Forgot Password?</a></p>
+                                    <div class="field-wrap">
+                                        <label>Password<span class="req"></span></label>
+                                        <input type="password" name = "password" required autocomplete="off"/>
+                                    </div>
 
-                            <input class = "button button-block" type="submit" name = "login" value = "LOG IN">
-                        </form>
-                    </div>
-                    
-                    <div id="signup">   
-                          <h1>Sign Up for Free</h1>
+                                    <p class="forgot"><a href="#">Forgot Password?</a></p>
 
-                          <form action="includes/register.inc.php" method="POST">
-                              <div class="top-row">
-                                <div class="field-wrap">
-                                  <label>
-                                    First Name<span class="req"></span>
-                                  </label>
-                                  <input type="text" required autocomplete="off" name="firstname" />
+                                    <input class = "button button-block" type="submit" name = "login" value = "LOG IN">
+                                </form>
                                 </div>
 
-                                <div class="field-wrap">
-                                  <label>
-                                    Last Name<span class="req"></span>
-                                  </label>
-                                  <input type="text"required autocomplete="off" name ="lastname"/>
-                                </div>
-                              </div>
+                                <div id="signup">   
+                                    <h1>Sign Up for Free</h1>
 
-                              <div class="field-wrap">
-                                <label>
-                                  Email Address<span class="req"></span>
-                                </label>
-                                <input type="email"required autocomplete="off"/ name ="email">
-                              </div>                              
+                                    <form action="includes/register.inc.php" method="POST">
+                                        <div class="top-row">
+                                            <div class="field-wrap">
+                                                <label>
+                                                First Name<span class="req"></span>
+                                                </label>
+                                                <input type="text" required autocomplete="off" name="firstname" />
+                                            </div>
 
-                              <div class="field-wrap">
-                                <label>
-                                  Password<span class="req"></span>
-                                </label>
-                                <input type="password"required autocomplete="off" name="password"/>
-                              </div>
-                              
-                              <div class="field-wrap">
-                                <label>
-                                  Retype Password<span class="req"></span>
-                                </label>
-                                <input type="password"required autocomplete="off" name="confirm_password"/>
-                              </div>
-                              
-                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+                                            <div class="field-wrap">
+                                                <label>
+                                                Last Name<span class="req"></span>
+                                                </label>
+                                                <input type="text"required autocomplete="off" name ="lastname"/>
+                                            </div>
+                                        </div>
 
-                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
-                          </form>
-                        
+                                        <div class="field-wrap">
+                                            <label>
+                                            Email Address<span class="req"></span>
+                                            </label>
+                                            <input type="email"required autocomplete="off"/ name ="email">
+                                        </div>  
+                                        
+                                        <div class="field-wrap">
+                                            <label>
+                                            Select Your University<span class="req"></span>
+                                            </label>
+                                            <input name = "university" type="text" list="universities" />
+                                            <datalist id="universities">
+                                                <option>Not Listed</option>
+                                                <?php
+                                                    formatSignUpUniversity();
+                                                ?>
+                                            </datalist>
+                                        </div>
+  
 
-                    </div>
-                </div><!-- tab-content -->
-              </div> <!-- /form -->
+                                        <div class="field-wrap">
+                                            <label>
+                                            Password<span class="req"></span>
+                                            </label>
+                                            <input type="password"required autocomplete="off" name="password"/>
+                                        </div>
+
+                                        <div class="field-wrap">
+                                            <label>
+                                            Retype Password<span class="req"></span>
+                                            </label>
+                                            <input type="password"required autocomplete="off" name="confirm_password"/>
+                                        </div>
+
+                                        <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                                        <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                                    </form>
+                            </div>
+                        </div><!-- tab-content -->
+                    </div> <!-- /form -->
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
 
 
 

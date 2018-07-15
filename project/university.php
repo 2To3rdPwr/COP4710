@@ -30,6 +30,44 @@
     <link href="css/university.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
+    <script src="http://maps.google.com/maps/api/js?sensor=false" 
+    type="text/javascript"></script> 
+
+    <script type="text/javascript">
+        <!--
+        function toggle_visibility(id, container) {
+            var e = document.getElementById(id);
+            var container = document.getElementById(container);
+            if(e.style.display == 'block')
+            {
+                e.style.display = 'none';
+                container.style.filter = 'blur(0px)';
+            }
+            else{
+                e.style.display = 'block';
+                container.style.filter = 'blur(3px)';
+            }
+        }
+        //-->
+    </script>
+    <script>
+        window.addEventListener('mouseup', function(event)
+        {
+            var box = document.getElementById('box1');
+            var toggle = document.getElementById('toggle');
+            var container = document.getElementById('container');
+            if(event.target == box && event.target.parentNode != box)
+                {
+                    box.style.display= 'none';
+                    container.style.filter ='blur(0px)';
+                }
+                                });
+
+    </script>
+
+
+          
+      
     <style>
         ::-webkit-scrollbar
         {
@@ -54,6 +92,7 @@
         height: 1000px;
           padding-top: 100px;
            /* background-color: blue;*/
+        filter: blur(0px);
 
             
         }
@@ -63,7 +102,8 @@
         padding: 20px;
         width: 50%;
         height: 100%;
-                            background-color: rgba(77,77,77,0.75);
+            margin: auto;
+        background-color: rgba(77,77,77,0.75);
         border-radius:25px;
             overflow: auto;
 
@@ -74,13 +114,13 @@
         {
                       float: right;
         position:relative;
-	       z-index:2;
         margin: auto;
         padding: 20px;
         width: 50%;
         height: 50%;
-          padding-top: 100px;
-            background-color: orange;  
+                            background-color: rgba(77,77,77,0.75);
+        border-radius:25px;
+            overflow: auto;
         }
         
                 .rso
@@ -109,6 +149,8 @@
         {
             width: 100%;
             height:auto;
+            align-content: center;
+            margin: auto;
             /*background-color: aquamarine*/
         }
         .eventfeed
@@ -119,6 +161,7 @@
             border: solid black;
             border-radius: 25px;
             margin-bottom: 5px;
+            align-content: center;
             
             
             /*background-color:white;*/
@@ -180,7 +223,72 @@
         {
             padding-right: 5px;
         }
+        .university-list
+        {
+            margin-bottom: 5px;
+        }
+        .university-profile-information
+        {
+            color: black;
+            margin-bottom:5px;
+        }
+        .add
+        {
+            float: right;
+            padding-top: 8px;
+        }
         
+        .popupBoxWrapper
+        {
+            width: 750px;
+            height: 250px;
+            margin: 250px auto; 
+            text-align: Center;
+
+
+        }
+        .background
+        {
+            top: 0; 
+            left: 0; 
+            position: fixed; 
+            float: left;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            display: none;
+            z-index: 2;
+        }
+        .rso-information
+        {
+            float: left;
+            margin-bottom: 0px;
+        }
+        .rso-profile
+        {
+            border: black 1px;
+            width: 100%;
+            border-radius: 25px;
+            float: left;
+            background-color: red;
+        }
+        .rso-details
+        {
+
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+        .rso-name
+        {
+            font-weight: bold;
+        }
+        .details
+        {
+            background-color: white;
+        }
 
 
     </style>
@@ -206,7 +314,7 @@
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
                           <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="university.php">University</a>
+              <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
@@ -224,29 +332,142 @@
 
     </header>
     
-    <div class="practicecontainer">
+    <div class="practicecontainer" id ="container">
         <div class="university-feed">
             <div class="eventheader">
                 <h1>University Events</h1>
             </div>
-
- 
-            
             <?php
-                getFormattedEvent('1');
+                getFormattedEvent();
             ?>
         
         </div>
         
         <div class ="university-profile">
-        
+            <div class="eventheader">
+                <?php
+                    getFormattedUniversityProfile();
+                ?>
+
+            </div>
         </div>
         
-        <div class ="rso">
+
+
         
+        <div class ="university-profile">
+            <div class="eventheader">
+                <h1 class="university-profile-header">
+                    RSO
+                    <a id="test" href ="javascript:void(0)" onclick="toggle_visibility('box1','container');"><img src="img/add.png" class="add"></a>
+
+                </h1>
+                    <?php
+                        getUniversityRSO();
+                    ?>
+                
+            </div>
         </div>
 
+
+
+
+
     </div>
+      
+    <div id ="box1" class="background">
+        <div class="popupBoxWrapper">
+            <div id="toggle" class="rso-form">
+              <div class="form">
+                  
+                <div class="tab-content">
+                    <div id="login">   
+                        <h1>Create an RSO</h1>
+
+                        <form id = "myForm" action="includes/rso.inc.php?university_id= 
+                            <?php 
+                            $university_id = $_GET['value_key']; 
+                            echo $university_id; 
+                            ?>
+                        " method="post">
+                            <div class="field-wrap">
+                                <p class="rso-information">RSO Name</p>
+                                <input type="rso-name" name ="rso-name" required autocomplete="off"/>
+                            </div>
+
+                            <div class="field-wrap">
+                                <p class="rso-information">Description</p>
+                                <textarea name ="description" type = "description" rows="2" cols="50" required></textarea>
+                            </div>
+
+                            <input class = "button button-block" type="submit" name = "rso-submit" value = "SUBMIT">
+                        </form>
+                    </div>
+                    <?php
+                        $fullurl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    
+                        if(strpos($fullurl, "error=nametaken") == true)
+                        {
+                            echo "<script type ='text/javascript'>                            
+                            toggle_visbility('box1', 'container');</script>";
+                            echo "<p style = color:red> This name has been taken already</p>";
+                        }
+                    ?>
+                    
+                    <div id="signup">   
+                          <h1>Sign Up for Free</h1>
+
+                          <form action="includes/register.inc.php" method="POST">
+                              <div class="top-row">
+                                <div class="field-wrap">
+                                  <label>
+                                    First Name<span class="req"></span>
+                                  </label>
+                                  <input type="text" required autocomplete="off" name="firstname" />
+                                </div>
+
+                                <div class="field-wrap">
+                                  <label>
+                                    Last Name<span class="req"></span>
+                                  </label>
+                                  <input type="text"required autocomplete="off" name ="lastname"/>
+                                </div>
+                              </div>
+
+                              <div class="field-wrap">
+                                <label>
+                                  Email Address<span class="req"></span>
+                                </label>
+                                <input type="email"required autocomplete="off"/ name ="email">
+                              </div>                              
+
+                              <div class="field-wrap">
+                                <label>
+                                  Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="password"/>
+                              </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                          </form>
+                        
+
+                    </div>
+                </div><!-- tab-content -->
+              </div> <!-- /form -->
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Map Section 
@@ -270,11 +491,12 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
 
     <!-- Custom scripts for this template -->
     <script src="js/grayscale.min.js"></script>
     <script src="js/login.js"></script>
+
 
   </body>
 

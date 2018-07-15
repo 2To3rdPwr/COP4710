@@ -1,12 +1,10 @@
 <?php
+    include 'includes/function.php';
     session_start();
     if(!isset($_SESSION['u_id'])){
        header("Location: index.php");
-	}else{
-		$userID = $_SESSION['u_id'];
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +31,18 @@
     <link href="css/login.css" rel="stylesheet">
       
     <style>
+                ::-webkit-scrollbar
+        {
+            border-radius: 10px;
+            width: 15px;
+            background-color:rgba(77,77,77,0.75);
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius:10px;
+            background-color:rgba(255,255,255,0.15);
+        }
+
         .practicecontainer
         {
         position:relative;
@@ -59,7 +69,6 @@
         {
             width: 100%;
             height:auto;
-			background-color: aquamarine;
         }
         .eventfeed
         {
@@ -84,6 +93,95 @@
         width: 50%;
             height: 435px;
         background-color: purple;
+        }
+                .event
+        {
+        float: left;
+        padding: 20px;
+        width: 100%;
+        height:800px;
+        background-color: rgba(77,77,77,0.75);
+        border-radius:25px;
+            overflow: auto;
+        }
+        .eventheader
+        {
+            width: 100%;
+            height:auto;
+            align-content: center;
+            margin: auto;
+            /*background-color: aquamarine*/
+        }
+        .eventfeed
+        {
+            height:auto;
+            width: auto;
+            overflow: auto;
+            border: solid black;
+            border-radius: 25px;
+            margin-bottom: 5px;
+            align-content: center;
+            
+            
+            /*background-color:white;*/
+        }
+
+        .date
+        {
+            float: left;
+            width: 15%;
+            height: 150px;
+            /*background-color: black;*/
+            padding-top: 30px;
+        }
+        .information
+        {
+            float: right;
+            width: 85%;
+            height: auto;
+            /*background-color:cyan;*/
+        }
+        
+        .headerfont
+        {
+            font-family:Cabin,'Helvetica Neue',Helvetica,Arial,sans-serif;
+            font-weight:700;
+            letter-spacing:1px;
+            text-transform:uppercase;
+            padding:7px;
+            padding-left: 50px;
+
+        }
+        .day
+        {
+            margin-bottom: -5px;
+        }
+        .eventname
+        {
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            margin-bottom: 5px;
+        }
+        .eventlocation
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .eventdescription
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .time
+        {
+            color: black;
+            margin-bottom: 5px;
+        }
+        .icons
+        {
+            padding-right: 5px;
         }
         
 
@@ -110,9 +208,9 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
-			<li class="nav-item"> 
-				<a class="nav-link js-scroll-trigger" href="universitylist.php">University</a> 
-			</li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
             </li>
@@ -133,56 +231,16 @@
 
           <div class="event">
               <div class ="eventheader">
-                    <h1 style = "color: white">Upcoming Events</h1>
+                    <h1 style = "color: black">Upcoming Events</h1>
               </div>
-              <div class="eventfeed">
-                  <p>
-					<?php
-						include 'includes/dbh.inc.php';
-						//error handeling
-						function customError($errno, $errstr) 
-						{
-							echo "<b>Error:</b> [$errno] $errstr<br>";
-						}
-						set_error_handler("customError");
-						
-						$sql = "SELECT DISTINCT event.* FROM event, user, host_event, rso_membership WHERE ((event.approved = 1) AND ((event.privacy = 0) OR ((event.privacy = 1) AND (event.university_id = user.university_id) AND (user.user_id = $userID)) OR ((event.privacy = 2) AND (event.event_id = host_event.event_id) AND (host_event.rso_id = rso_membership.rso_id) AND (rso_membership.user_id = $userID)))) ORDER BY event.date ASC";
-						//$sql = "SELECT DISTINCT event.* FROM event";
-						$result = mysqli_query($conn, $sql);
-						echo("Num Rows: $result->num_rows<br>");
-						$index = 0;
-						$eventIDs = array();
-						$eventNames = array();
-						$eventUIDs = array();
-						$eventLocations = array();
-						$eventDescriptions = array();
-						$eventDates = array();
-						
-						//Get arrays of data 
-						while($row = $result->fetch_assoc()) 
-						{
-							$eventIDs[$index] = $row["event_id"];
-							$eventUIDs[$index] = $row["university_id"];
-							$eventNames[$index] = $row["name"];
-							$eventLocations[$index] = $row["location"];
-							$eventDates[$index] = $row["date"];
-							$eventDescriptions[$index] = $row["description"];
-							
-							$index = $index + 1;
-						}
-						
-						for($i = 0; $i < $index; $i++)
-						{
-							$sql = "SELECT university.name FROM university WHERE (university.university_id = $eventUIDs[$i])";
-							$result = mysqli_query($conn, $sql);
-							while($row = $result->fetch_assoc())
-							{
-								$eventUName = $row["name"];
-							}
-							echo "Event: $eventNames[$i]    $eventUName     $eventLocations[$i]      $eventDates[$i]      $eventDescriptions[$i]<br>";
-						}
-					?></p>
-              </div>
+            <?php
+                $university_id = $_SESSION['university_id'];
+                $user_id = $_SESSION['u_id'];
+                getHomePageEventFeed($university_id, $user_id);
+                
+
+            ?>
+              
           </div>
             
 

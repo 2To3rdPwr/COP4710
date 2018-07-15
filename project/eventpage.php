@@ -60,10 +60,9 @@
         float: left;
         padding: 20px;
         width: 100%;
-        height:auto;
-        max-height: 800px;
-            overflow-y: auto;
-        background-color: rgba(77,77,77,0.75);
+        height:800px;
+
+                    background-color: rgba(77,77,77,0.75);
         border-radius:25px;
         }
         .eventheader
@@ -75,16 +74,13 @@
         .eventfeed
         {
             height:auto;
-            width: 100%;
-            margin: auto;
-            align-content: center;
+            width: auto;
             overflow:auto;
-
         }
         
         .practicecontainer3
         {
-        float:none;
+        float: right;
         padding: 20px;
         width: 50%;
             height: 435px;
@@ -99,13 +95,14 @@
             height: 435px;
         background-color: purple;
         }
-        .university-list
+                .information
         {
-            margin: auto;
-            width: 50%;
-            padding: 10px;
-            text-align:center;
+            float: right;
+            width: 85%;
+            height: auto;
+            /*background-color:cyan;*/
         }
+        
         
 
 
@@ -153,17 +150,12 @@
     <div class="practicecontainer">
 
           <div class="event">
-              <div class ="eventheader">
-                    <h1 style = "color: white">List of Universities</h1>
-              </div>
-              <div class="eventfeed">
 
-                    <?php
-                  listUniversities();
+                  <?php
+                  getEventPage();
                   ?>
 
 
-              </div>
           </div>
             
 

@@ -2,6 +2,7 @@
 if(isset($_POST['register']))
 {
     include_once 'dbh.inc.php';
+    include_once 'function.php';
     
     $pass = $_POST['password'];
     $confirmpass = $_POST['confirm_password'];
@@ -9,6 +10,7 @@ if(isset($_POST['register']))
     $first = mysqli_real_escape_string($conn, $_POST['firstname']);
     $last = mysqli_real_escape_string($conn, $_POST['lastname']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $university = mysqli_real_escape_string($conn, $_POST['university']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
     $confirmpassword = mysqli_real_escape_string($conn, $_POST['confirm_password']);
 
@@ -16,7 +18,7 @@ if(isset($_POST['register']))
     
     // Error Handlers
     // Checks if any forms are empty
-    if (empty($first) || empty($last) || empty($email) || empty($password) || empty($confirmpassword))
+    if (empty($first) || empty($last) || empty($email) || empty($university) || empty($password) || empty($confirmpassword))
     {
         header("Location: ../index.php?signup=empty");
         exit();
@@ -51,22 +53,40 @@ if(isset($_POST['register']))
                 }
                 else
                 {
-                    if($pass != $confirmpass)
+                    
+                    $sql = "SELECT university_id FROM university WHERE name = '$university'";
+                    $result = mysqli_query($conn, $sql);
+                    $resultcheck = mysqli_num_rows($result);
+                    $row= mysqli_fetch_assoc($result);
+                    $university_id = $row['university_id'];
+                    
+                    
+                    if(!$result)
                     {
-                        header("Location: ../index.php?signup=retypepassword");
+                        $message = mysqli_error($conn);
+                        alert($message);
+                        header("Location: ../index.php?signup=errorcollege&");
                         exit();
                     }
                     else
                     {
-                        // hash password
-                        $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-                        
-                        
-						$sql = "INSERT INTO `user` (user_id, university_id, email, password, firstname, lastname, permission_level) VALUES (NULL, 3, '$email', '$hashedpassword', '$first', '$last', 0)";
-                        
-                        mysqli_query($conn, $sql);
-                        header("Location: ../index.php?signup=success");
-                        exit();
+                        if($pass != $confirmpass)
+                        {
+                            header("Location: ../index.php?signup=retypepassword");
+                            exit();
+                        }
+                        else
+                        {
+                            // hash password
+                            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+
+
+                            $sql = "INSERT INTO user (firstname, lastname, email, university_id, password) VALUES ('$first', '$last', '$email', '$university_id', '$hashedpassword');";
+
+                            mysqli_query($conn, $sql);
+                            header("Location: ../index.php?signup=success");
+                            exit();
+                        }
                     }
                 }
             }
