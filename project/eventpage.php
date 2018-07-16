@@ -30,6 +30,36 @@
     <link href="css/homepage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
+	              <script type="text/javascript">
+        function toggle_visibility(id, container) {
+            var e = document.getElementById(id);
+            var container = document.getElementById(container);
+            if(e.style.display == 'block')
+            {
+                e.style.display = 'none';
+                container.style.filter = 'blur(0px)';
+            }
+            else{
+                e.style.display = 'block';
+                container.style.filter = 'blur(3px)';
+            }
+        }
+
+    </script>
+    <script>
+        window.addEventListener('mouseup', function(event)
+        {
+            var box = document.getElementById('box1');
+            var toggle = document.getElementById('toggle');
+            var container = document.getElementById('container');
+            if(event.target == box && event.target.parentNode != box)
+                {
+                    box.style.display= 'none';
+                    container.style.filter ='blur(0px)';
+                }
+                                });
+
+    </script>
     <style>
                 ::-webkit-scrollbar
         {
@@ -46,12 +76,13 @@
         .practicecontainer
         {
         position:relative;
-	   z-index:2;
+
         margin: auto;
         padding: 20px;
         width: 80%;
         height: 1000px;
           padding-top: 100px;
+		  filter: blur(0px);
 
             
         }
@@ -108,7 +139,7 @@
         {
             width: 100%;
             height: 350px;
-            margin-top: 250px;
+
             float: left;
 
         }
@@ -117,6 +148,92 @@
             float: left;
             color: black;
         }
+		.comment_container
+		{
+			background-color: black;
+			margin-top: 25px;
+			height: auto;
+			
+
+		}
+		.datetimestamp
+		{
+			float:left;
+		}
+		.commentbody
+		{
+			color:white;	
+		}
+		        .background
+        {
+            top: 0; 
+            left: 0; 
+            position: fixed; 
+            float: left;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            display: none;
+            z-index: 2;
+			margin-top: 100px;
+        }
+		 .eventfeed
+        {
+            height:auto;
+            width: auto;
+            overflow: auto;
+            border: solid black;
+            border-radius: 25px;
+            margin-t: 5px;
+            align-content: center;
+            
+            
+            /*background-color:white;*/
+        }
+
+        .date
+        {
+            float: left;
+            width: 15%;
+            height: 150px;
+            /*background-color: black;*/
+            padding-top: 30px;
+        }
+        .information
+        {
+            float: right;
+            width: 100%;
+            height: 300px;
+            /*background-color:cyan;*/
+        }
+		 .day
+        {
+            margin-bottom: -5px;
+        }
+        .eventname
+        {
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            margin-bottom: 5px;
+        }
+        .eventlocation
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .eventdescription
+        {
+            color: black;
+            margin-bottom: 0px;
+        }
+        .time
+        {
+            color: black;
+            margin-bottom: 5px;
+        }
+		
         
         
 
@@ -174,20 +291,129 @@
     <header class="masthead">
 
     </header>
+	
+	      <div id ="box1" class="background">
+            <div class="popupBoxWrapper">
+                <div id="toggle" class="rso-form">
+                    <div class="form">
+                  
+                    <div class="tab-content">
+                    <div id="login" class = "edit-info">   
+                        <h1>Edit Comment</h1>
+
+                        <form id = "myForm" action="includes/editcomment.php?event_key=
+						<?php
+							$event_id = $_GET['event_key'];
+							echo $event_id;
+							$university_id = $_GET['value_key'];
+							echo '&value_key=' . $university_id;
+						?>
+						
+						" method="post">
+                            <div class="field-wrap">
+                                <p class="rso-information">Comment:</p>
+                                <textarea class="rso-form" name ="edit" type = "description" rows="2" cols="50" required></textarea>
+                            </div>
+                            
+
+                            <input class = "button button-block" type="submit" name = "submit" value = "SUBMIT">
+                        </form>
+                    </div>
+                    <?php
+                        $fullurl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    
+                        if(strpos($fullurl, "error=nametaken") == true)
+                        {
+                            echo "<script type ='text/javascript'>                            
+                            toggle_visbility('box1', 'container');</script>";
+                            echo '<p style= "color:red">This University Profile has already been made</p>';
+                        }
+                    ?>
+                    
+                    <div id="signup">   
+                          <h1>Sign Up for Free</h1>
+
+                          <form action="includes/register.inc.php" method="POST">
+                              <div class="top-row">
+                                <div class="field-wrap">
+                                  <label>
+                                    First Name<span class="req"></span>
+                                  </label>
+                                  <input type="text" required autocomplete="off" name="firstname" />
+                                </div>
+
+                                <div class="field-wrap">
+                                  <label>
+                                    Last Name<span class="req"></span>
+                                  </label>
+                                  <input type="text"required autocomplete="off" name ="lastname"/>
+                                </div>
+                              </div>
+
+                              <div class="field-wrap">
+                                <label>
+                                  Email Address<span class="req"></span>
+                                </label>
+                                <input type="email"required autocomplete="off"/ name ="email">
+                              </div>                              
+
+                              <div class="field-wrap">
+                                <label>
+                                  Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="password"/>
+                              </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                          </form>
+                        
+
+                    </div>
+                </div><!-- tab-content -->
+              </div> <!-- /form -->
+            </div>
+        </div>
+    </div>
     
-    <div class="practicecontainer">
+    <div class="practicecontainer" id="container">
 
           <div class="event">
 
                   <?php
                   getEventPage();
-                    
+           
                   ?>
-              <div class="comments">
                   <p class="comment">Comments</p>
                 <?php
                   getEventComments();
                 ?>
+
+				<div class="usercomment">
+				<form id = "myForm" action="includes/createcomment.php?value_key=
+				<?php
+					$value = $_GET['value_key'];
+					echo $value . '&';
+				?>
+				event_key=
+				<?php
+					$event = $_GET['event_key'];
+					echo $event;
+				?>
+				" method="post">
+					<p style = "color:black">Make a Comment:</p>
+					<textarea name ="comment" type = "text" rows="2" cols="50" required></textarea>
+					<input class = "button button-block" type="submit" name = "comment-submit" value = "SUBMIT">
+				</form>
+				</div>
               </div>
 
 

@@ -138,7 +138,9 @@ function getUserAssociatedRSOs($user_id)
 function getEventComments()
 {
 	include 'dbh.inc.php';
+	$user_id = $_SESSION['u_id'];
 	$event_id = $_GET['event_key'];
+	$university_id = $_GET['value_key'];
 	
 	$sql = "SELECT C.*
 			FROM comment C, event E
@@ -153,22 +155,65 @@ function getEventComments()
 	}
 	else
 	{
-		$i = 0;
-		$commentTitle = array();
-		$commentBody = array();
-		$commentRating = array();
-		$commentDate = array();
+
+
 		while($row = mysqli_fetch_assoc($result))
 		{
-			$commentTitle[$i] = $row['title'];
-			$commentBody[$i] = $row['body'];
-			$commentRating[$i] = $row['rating'];
-			$commentDate[$i] = $row['date'];
+			$comment_user_id = $row['user_id'];
+			$comment_id = $row['comment_id'];
+			$commentBody = $row['body'];
+			//$commentRating = $row['rating'];
+			$commentDate = $row['date'];
             
-			echo $commentBody[$i] . '<br><br>';
-			$i++;
+			echo '	<div class="eventfeed">
+					<div class="date">
+					<h1 class = "day">' . $commentDate . '</h1>';
+			echo   '</div>
+                    <div class="information">
+                        <p class ="eventname">' . $commentBody . '</p>';
+
+					
+					if($user_id == $comment_user_id)
+					{
+						echo '<p><a class="commentbody" href="javascript:void(0);" onclick="toggle_visibility('
+						 . "'box1', 'container'" . ');">Edit</a></p>
+								<p><a class="commentbody" href="includes/deletecomment.php?event_key='; 
+									$event_id = $_GET['event_key'];
+									echo  $event_id;
+									$university_id = $_GET['value_key'];
+									echo '&value_key=' . $university_id .'
+								
+								">Delete</a></p>';
+								
+					}
+			
+			echo '</div>';
 		}
 	}
+			/* 	            <div class="date">
+            <h1 class = "day">';
+            echo    $day  ;          
+            echo    '</h1>';
+            echo    '<p class="headerfont">' ;
+            echo    $test . ' ' . $year ;
+            echo   '</p>
+                    </div>
+                    <div class="information">
+                        <p class ="eventname">'
+                        . $university_name . ' - '. $event_name .
+                        '</p>
+                        <p class ="eventlocation">
+                            <img class = "icons" src=img/location.png>'
+                            . $event_location . 
+                        '</p>
+                        <p class ="time">
+                            <img class = "icons" src ="img/clock.png">
+                                at ' . $time_in_12_hour_format . '
+                        </p>
+                        <p class = "eventdescription">'
+                        . $event_description .
+                        '</p>';*/
+
 }
 function getEventPage()
 {
@@ -176,8 +221,8 @@ function getEventPage()
     $university_id = $_GET['value_key'];
     $event_id = $_GET['event_key'];
     
-    $sql = "SELECT * FROM event WHERE university_id = $university_id AND event_id= $event_id";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM event WHERE university_id = $university_id AND event_id= $event_id" ;
+    $result = mysqli_query($conn, $sql)or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
     $resultcheck = mysqli_num_rows($result);
     
     
