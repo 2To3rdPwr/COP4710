@@ -135,6 +135,43 @@ function getUserAssociatedRSOs($user_id)
 
 }
 
+//get event comments
+function getEventComments()
+{
+	include 'dbh.inc.php';
+	$event_id = $_GET['event_key'];
+	
+	$sql = "SELECT C.*
+			FROM comment C, event E
+			WHERE E.event_id = '$event_id'
+			ORDER BY C.date DESC";
+			
+	$result = mysqli_query($conn, $sql);
+	$resultcheck = mysqli_num_rows($result);
+	if($resultcheck == 0)
+	{
+		return;
+	}
+	else
+	{
+		$i = 0;
+		$commentTitle = array();
+		$commentBody = array();
+		$commentRating = array();
+		$commentDate = array();
+		while($row = mysqli_fetch_assoc($result))
+		{
+			$commentTitle[$i] = $row['title'];
+			$commentBody[$i] = $row['body'];
+			$commentRating[$i] = $row['rating'];
+			$commentDate[$i] = $row['date'];
+			echo $commentTitle[$i] . '	Rating: ' . $commentRating[$i] . ' Stars <br>';
+			echo $commentBody[$i] . '<br><br>';
+			$i++;
+		}
+	}
+}
+
 function getEventPage()
 {
     include 'dbh.inc.php';
