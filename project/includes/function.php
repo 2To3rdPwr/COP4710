@@ -290,15 +290,27 @@ function getHomePageEventFeed($university_id, $user_id)
             WHERE (E.approved = '1') 
             AND (E.university_id = '$university_id') 
             AND (E.rso_id IN (SELECT R.rso_id
-            FROM rso_membership R
-            WHERE user_id = '$user_id'))
-            UNION
-            SELECT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
-            FROM event E
-            WHERE (E.approved = '1') 
-            AND (E.university_id = '1')
-            AND (E.rso_id IS NULL)
+							  FROM rso_membership R
+							  WHERE user_id = '$user_id'))
+			UNION
+			SELECT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
+			FROM event E
+			WHERE (E.approved = '1') 
+			AND (E.university_id = '1')
+			AND (E.rso_id IS NULL)
             ORDER BY date";
+			
+	$sql = "SELECT DISTINCT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
+            FROM event E, user U, rso_membership M
+            WHERE E.approved = '1' 
+            AND (E.privacy = '0'
+				OR (E.privacy = '1' 
+					AND E.university_id = U.university_id
+					AND U.user_id = '$user_id')
+				OR (E.privacy = '2'
+					AND E.rso_id = M.rso_id
+					AND M.user_id = '$user_id'))
+            ORDER BY E.date ASC";
     
 
 	$result = mysqli_query($conn, $sql) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
