@@ -30,6 +30,37 @@
     <link href="css/homepage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
+      <script type="text/javascript">
+        function toggle_visibility(id, container) {
+            var e = document.getElementById(id);
+            var container = document.getElementById(container);
+            if(e.style.display == 'block')
+            {
+                e.style.display = 'none';
+                container.style.filter = 'blur(0px)';
+            }
+            else{
+                e.style.display = 'block';
+                container.style.filter = 'blur(3px)';
+            }
+        }
+
+    </script>
+    <script>
+        window.addEventListener('mouseup', function(event)
+        {
+            var box = document.getElementById('box1');
+            var toggle = document.getElementById('toggle');
+            var container = document.getElementById('container');
+            if(event.target == box && event.target.parentNode != box)
+                {
+                    box.style.display= 'none';
+                    container.style.filter ='blur(0px)';
+                }
+                                });
+
+    </script>
+      
     <style>
                 ::-webkit-scrollbar
         {
@@ -46,12 +77,13 @@
         .practicecontainer
         {
         position:relative;
-	   z-index:2;
+
         margin: auto;
         padding: 20px;
         width: 80%;
         height: 1000px;
           padding-top: 100px;
+        filter: blur(0px);
 
             
         }
@@ -106,6 +138,78 @@
             padding: 10px;
             text-align:center;
         }
+        .add-university
+        {
+            float: right;
+            margin-top: 10px;
+        }
+        .university-list-header
+        {
+            color: black;
+            margin-left: 50px;
+        }
+                .add
+        {
+            float: right;
+            padding-top: 8px;
+        }
+        
+        .popupBoxWrapper
+        {
+            width: 750px;
+            height: 250px;
+            margin: 250px auto; 
+            text-align: Center;
+            margin-top: 100px;
+
+
+        }
+        .background
+        {
+            top: 0; 
+            left: 0; 
+            position: fixed; 
+            float: left;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            display: none;
+            z-index: 2;
+        }
+        .rso-information
+        {
+            float: left;
+            margin-bottom: 0px;
+        }
+        .rso-profile
+        {
+            border: black 1px;
+            width: 100%;
+            border-radius: 25px;
+            float: left;
+            background-color: red;
+        }
+        .rso-details
+        {
+
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+        .rso-name
+        {
+            font-weight: bold;
+        }
+        .details
+        {
+            background-color: white;
+        }
+        .rso-form
+        {
+            margin-bottom: -10px;
+        }
         
 
 
@@ -149,12 +253,126 @@
     <header class="masthead">
 
     </header>
+      
+        <div id ="box1" class="background">
+            <div class="popupBoxWrapper">
+                <div id="toggle" class="rso-form">
+                    <div class="form">
+                  
+                    <div class="tab-content">
+                    <div id="login">   
+                        <h1>Create a University Profile</h1>
+
+                        <form id = "myForm" action="includes/createuniversity.inc.php" method="post">
+                            <div class="field-wrap">
+                                <p class="rso-information">University Name</p>
+                                <input class="rso-form" name ="name" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Location</p>
+                                <input class="rso-form" name="location" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Website URL</p>
+                                <input class="rso-form" name="website" required autocomplete="off"/>
+                            </div>
+
+                            <div class="field-wrap">
+                                <p class="rso-information">Description</p>
+                                <textarea class="rso-form" name ="description" type = "description" rows="2" cols="50" required></textarea>
+                            </div>
+                            
+
+                            <input class = "button button-block" type="submit" name = "university-submit" value = "SUBMIT">
+                        </form>
+                    </div>
+                    <?php
+                        $fullurl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    
+                        if(strpos($fullurl, "error=nametaken") == true)
+                        {
+                            echo "<script type ='text/javascript'>                            
+                            toggle_visbility('box1', 'container');</script>";
+                            echo '<p style= "color:red">This University Profile has already been made</p>';
+                        }
+                    ?>
+                    
+                    <div id="signup">   
+                          <h1>Sign Up for Free</h1>
+
+                          <form action="includes/register.inc.php" method="POST">
+                              <div class="top-row">
+                                <div class="field-wrap">
+                                  <label>
+                                    First Name<span class="req"></span>
+                                  </label>
+                                  <input type="text" required autocomplete="off" name="firstname" />
+                                </div>
+
+                                <div class="field-wrap">
+                                  <label>
+                                    Last Name<span class="req"></span>
+                                  </label>
+                                  <input type="text"required autocomplete="off" name ="lastname"/>
+                                </div>
+                              </div>
+
+                              <div class="field-wrap">
+                                <label>
+                                  Email Address<span class="req"></span>
+                                </label>
+                                <input type="email"required autocomplete="off"/ name ="email">
+                              </div>                              
+
+                              <div class="field-wrap">
+                                <label>
+                                  Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="password"/>
+                              </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                          </form>
+                        
+
+                    </div>
+                </div><!-- tab-content -->
+              </div> <!-- /form -->
+            </div>
+        </div>
+    </div>
     
-    <div class="practicecontainer">
+    <div class="practicecontainer" id="container">
 
           <div class="event">
               <div class ="eventheader">
-                    <h1 style = "color: white">List of Universities</h1>
+                    <h1 class="university-list-header">List of Universities
+                    <?php
+                        if($_SESSION['privilege'] == 1)
+                        {
+                            echo '<a id="test" href="javascript:void(0)"';
+                            echo ' onclick="toggle_visibility(';
+                            echo "'box1', 'container'";
+                            echo ');"><img src="img/add.png" class="add"></a>';
+                        }
+                        else
+                        {
+                            ;
+                        }
+                    ?>
+                  </h1>
+                    
               </div>
               <div class="eventfeed">
 
@@ -168,6 +386,8 @@
             
 
     </div>
+      
+
 
 
     <!-- Map Section 
@@ -179,7 +399,7 @@
     <!-- Footer -->
     <footer>
       <div class="container text-center">
-        <p>Copyright &copy; Your Website 2018</p>
+        <p>Copyright &copy; College Event Manager 2018</p>
       </div>
     </footer>
 

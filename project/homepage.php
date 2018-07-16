@@ -30,6 +30,37 @@
     <link href="css/homepage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
+            <script type="text/javascript">
+        function toggle_visibility(id, container) {
+            var e = document.getElementById(id);
+            var container = document.getElementById(container);
+            if(e.style.display == 'block')
+            {
+                e.style.display = 'none';
+                container.style.filter = 'blur(0px)';
+            }
+            else{
+                e.style.display = 'block';
+                container.style.filter = 'blur(3px)';
+            }
+        }
+
+    </script>
+    <script>
+        window.addEventListener('mouseup', function(event)
+        {
+            var box = document.getElementById('box1');
+            var toggle = document.getElementById('toggle');
+            var container = document.getElementById('container');
+            if(event.target == box && event.target.parentNode != box)
+                {
+                    box.style.display= 'none';
+                    container.style.filter ='blur(0px)';
+                }
+                                });
+
+    </script>
+      
     <style>
                 ::-webkit-scrollbar
         {
@@ -46,12 +77,12 @@
         .practicecontainer
         {
         position:relative;
-	   z-index:2;
         margin: auto;
         padding: 20px;
         width: 80%;
         height: 1000px;
           padding-top: 100px;
+        filter: blur(0px);
 
             
         }
@@ -183,7 +214,67 @@
         {
             padding-right: 5px;
         }
-        
+                        .add
+        {
+            float: right;
+            padding-top: 8px;
+        }
+                .popupBoxWrapper
+        {
+            width: 750px;
+            height: 250px;
+            margin: 250px auto; 
+            text-align: Center;
+            margin-top: 100px;
+
+
+        }
+        .background
+        {
+            top: 0; 
+            left: 0; 
+            position: fixed; 
+            float: left;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            display: none;
+            z-index: 2;
+        }
+        .rso-information
+        {
+            float: left;
+            margin-bottom: 0px;
+        }
+        .rso-profile
+        {
+            border: black 1px;
+            width: 100%;
+            border-radius: 25px;
+            float: left;
+            background-color: red;
+        }
+        .rso-details
+        {
+
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+        .rso-name
+        {
+            font-weight: bold;
+        }
+        .details
+        {
+            background-color: white;
+        }
+        .rso-form
+        {
+            margin-bottom: -10px;
+        }
 
 
     </style>
@@ -226,12 +317,132 @@
     <header class="masthead">
 
     </header>
+      
+      <div id ="box1" class="background">
+            <div class="popupBoxWrapper">
+                <div id="toggle" class="rso-form">
+                    <div class="form">
+                  
+                    <div class="tab-content">
+                    <div id="login">   
+                        <h1>Create an Event</h1>
+
+                        <form id = "myForm" action="includes/createuniversity.inc.php" method="post">
+                            <div class="field-wrap">
+                                <p class="rso-information">Event Name</p>
+                                <input class="rso-form" name ="name" type = "text" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">University</p>
+                                <input class="rso-form" type = "text" name="university" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Location</p>
+                                <input class="rso-form" type = "text" name="location" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Date</p>
+                                <input class="rso-form" type = "date" name="location" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">RSO (Optional)</p>
+                                
+                                <input name = "rso-name" type="text" list="rso" />
     
-    <div class="practicecontainer">
+                                <datalist id="rso">
+                                    <option selected>None</option>
+                                    <?php
+                                        $user_id = $_SESSION['u_id'];
+                                        getUserAssociatedRSOs($user_id);
+                                    ?>
+                                </datalist>
+                            </div>
+
+
+                            <div class="field-wrap">
+                                <p class="rso-information">Description</p>
+                                <textarea class="rso-form" name ="description" type = "description" rows="2" cols="50" required></textarea>
+                            </div>
+                            
+
+                            <input class = "button button-block" type="submit" name = "university-submit" value = "SUBMIT">
+                        </form>
+                    </div>
+                    <?php
+                        $fullurl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    
+                        if(strpos($fullurl, "error=nametaken") == true)
+                        {
+                            echo "<script type ='text/javascript'>                            
+                            toggle_visbility('box1', 'container');</script>";
+                            echo '<p style= "color:red">This University Profile has already been made</p>';
+                        }
+                    ?>
+                    
+                    <div id="signup">   
+                          <h1>Sign Up for Free</h1>
+
+                          <form action="includes/register.inc.php" method="POST">
+                              <div class="top-row">
+                                <div class="field-wrap">
+                                  <label>
+                                    First Name<span class="req"></span>
+                                  </label>
+                                  <input type="text" required autocomplete="off" name="firstname" />
+                                </div>
+
+                                <div class="field-wrap">
+                                  <label>
+                                    Last Name<span class="req"></span>
+                                  </label>
+                                  <input type="text"required autocomplete="off" name ="lastname"/>
+                                </div>
+                              </div>
+
+                              <div class="field-wrap">
+                                <label>
+                                  Email Address<span class="req"></span>
+                                </label>
+                                <input type="email"required autocomplete="off"/ name ="email">
+                              </div>                              
+
+                              <div class="field-wrap">
+                                <label>
+                                  Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="password"/>
+                              </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                          </form>
+                        
+
+                    </div>
+                </div><!-- tab-content -->
+              </div> <!-- /form -->
+            </div>
+        </div>
+    </div>
+    
+    <div id = "container" class="practicecontainer">
 
           <div class="event">
               <div class ="eventheader">
-                    <h1 style = "color: black">Upcoming Events</h1>
+                    <h1 style = "color: black">Upcoming Events                           <a id="test" href="javascript:void(0)"
+                            onclick="toggle_visibility('box1', 'container');"><img src="img/add.png" class="add"></a></h1>
               </div>
             <?php
                 $university_id = $_SESSION['university_id'];
@@ -256,7 +467,7 @@
     <!-- Footer -->
     <footer>
       <div class="container text-center">
-        <p>Copyright &copy; Your Website 2018</p>
+        <p>Copyright &copy; College Event Manager 2018</p>
       </div>
     </footer>
 

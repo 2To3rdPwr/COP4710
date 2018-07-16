@@ -1,4 +1,5 @@
 <?php
+                    include 'includes/function.php';
 
     session_start();
     if(!isset($_SESSION['u_id'])){
@@ -32,6 +33,37 @@
     <link href="css/homepage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
+                  <script type="text/javascript">
+        function toggle_visibility(id, container) {
+            var e = document.getElementById(id);
+            var container = document.getElementById(container);
+            if(e.style.display == 'block')
+            {
+                e.style.display = 'none';
+                container.style.filter = 'blur(0px)';
+            }
+            else{
+                e.style.display = 'block';
+                container.style.filter = 'blur(3px)';
+            }
+        }
+
+    </script>
+    <script>
+        window.addEventListener('mouseup', function(event)
+        {
+            var box = document.getElementById('box1');
+            var toggle = document.getElementById('toggle');
+            var container = document.getElementById('container');
+            if(event.target == box && event.target.parentNode != box)
+                {
+                    box.style.display= 'none';
+                    container.style.filter ='blur(0px)';
+                }
+                                });
+
+    </script>
+      
     <style>
                 ::-webkit-scrollbar
         {
@@ -48,12 +80,13 @@
         .practicecontainer
         {
         position:relative;
-	   z-index:2;
         margin: auto;
         padding: 20px;
         width: 80%;
         height: 1000px;
-          padding-top: 100px;
+        padding-top: 100px;
+        filter: blur(0px);
+        
 
             
         }
@@ -96,7 +129,83 @@
             height: 435px;
         background-color: purple;
         }
-        
+        .profile-information
+        {
+            color: black;
+        }
+        .profile-rso
+        {
+            margin-top: -30px;
+            margin-left: 20px;
+            color: black;
+        }
+        .add
+        {
+            float: right;
+            padding-top: 8px;
+        }
+        .popupBoxWrapper
+        {
+            width: 750px;
+            height: 500px;
+            margin: 250px auto; 
+            text-align: Center;
+            margin-top: 100px;
+
+
+        }
+        .background
+        {
+            top: 0; 
+            left: 0; 
+            position: fixed; 
+            float: left;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            display: none;
+            z-index: 2;
+        }
+        .rso-information
+        {
+            float: left;
+            margin-bottom: 0px;
+        }
+        .rso-profile
+        {
+            border: black 1px;
+            width: 100%;
+            border-radius: 25px;
+            float: left;
+            background-color: red;
+        }
+        .rso-details
+        {
+
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+        .rso-name
+        {
+            font-weight: bold;
+        }
+        .details
+        {
+            background-color: white;
+        }
+        .rso-form
+        {
+            margin-bottom: -10px;
+        }
+        .edit-info
+        {
+            height: 750px;
+            overflow-y: auto;
+        }
+
 
 
     </style>
@@ -139,17 +248,165 @@
     <header class="masthead">
 
     </header>
+      
+             <div id ="box1" class="background">
+            <div class="popupBoxWrapper">
+                <div id="toggle" class="rso-form">
+                    <div class="form">
+                  
+                    <div class="tab-content">
+                    <div id="login" class="edit-info">   
+                        <h1>Edit Profile Information</h1>
+
+                        <form id = "myForm" action="includes/edit.inc.php" method="post">
+                            <div class="field-wrap">
+                                <p class="rso-information">First Name</p>
+                                <?php
+                                    include_once 'includes/dbh.inc.php';
+                                    $user_id = $_SESSION['u_id'];
+                                    $sql = "SELECT firstname from user where user_id = '$user_id'";
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $first = $row['firstname'];
+                                    echo '<input class="rso-form" name ="first" value ="' . $first . '" required autocomplete="off"/>';
+                                ?>       
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Last Name</p>
+                                <?php
+                                    include_once 'includes/dbh.inc.php';
+                                    $user_id = $_SESSION['u_id'];
+                                    $sql = "SELECT lastname from user where user_id = '$user_id'";
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $last = $row['lastname'];
+                                    echo '<input class="rso-form" name ="last" value ="' . $last . '" required autocomplete="off"/>';
+                                ?>   
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">E-mail</p>
+                                <?php
+                                    include_once 'includes/dbh.inc.php';
+                                    $user_id = $_SESSION['u_id'];
+                                    $sql = "SELECT email from user where user_id = '$user_id'";
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $email= $row['email'];
+                                    echo '<input class="rso-form" name ="email" type="email" value ="' . $email . '" required autocomplete="off"/>';
+                                ?>   
+                            </div>
+
+                            <div class="field-wrap">
+                                <p class="rso-information">University</p>
+                                <?php
+                                    include_once 'includes/dbh.inc.php';
+                                    $user_id = $_SESSION['u_id'];
+                                    $sql = "SELECT U.name from university U, user U1 where U.university_id = U1.university_id AND user_id = '$user_id'";
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $university_name= $row['name'];
+                                    echo '<input class="rso-form" name ="university" type="text" list ="universities" value ="' . $university_name . '" required autocomplete="off"/>';
+                                ?>  
+                                <datalist id="universities">
+                                    <option>Not Listed</option>
+                                    <?php
+                                        formatSignUpUniversity();
+                                    ?>
+                                </datalist>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Password</p>
+                                <input type="password"required autocomplete="off" name="password"/>
+                            </div>
+
+                            <div class="field-wrap">
+                                <p class="rso-information">Retype Password</p>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                            </div>
+                            
+
+                            <input class = "button button-block" type="submit" name = "submit" value = "SUBMIT">
+                        </form>
+                    </div>
+                    <?php
+                        $fullurl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    
+                        if(strpos($fullurl, "error=nametaken") == true)
+                        {
+                            echo "<script type ='text/javascript'>                            
+                            toggle_visbility('box1', 'container');</script>";
+                            echo '<p style= "color:red">This University Profile has already been made</p>';
+                        }
+                    ?>
+                    
+                    <div id="signup">   
+                          <h1>Sign Up for Free</h1>
+
+                          <form action="includes/register.inc.php" method="POST">
+                              <div class="top-row">
+                                <div class="field-wrap">
+                                  <label>
+                                    First Name<span class="req"></span>
+                                  </label>
+                                  <input type="text" required autocomplete="off" name="firstname" />
+                                </div>
+
+                                <div class="field-wrap">
+                                  <label>
+                                    Last Name<span class="req"></span>
+                                  </label>
+                                  <input type="text"required autocomplete="off" name ="lastname"/>
+                                </div>
+                              </div>
+
+                              <div class="field-wrap">
+                                <label>
+                                  Email Address<span class="req"></span>
+                                </label>
+                                <input type="email"required autocomplete="off"/ name ="email">
+                              </div>                              
+
+                              <div class="field-wrap">
+                                <label>
+                                  Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="password"/>
+                              </div>
+                              
+                              <div class="field-wrap">
+                                <label>
+                                  Retype Password<span class="req"></span>
+                                </label>
+                                <input type="password"required autocomplete="off" name="confirm_password"/>
+                              </div>
+                              
+                              <p class="forgot">Already have an account? <a href="index.php">Log In</a></p>
+
+                              <input class = "button button-block" type="submit" name = "register" value = "SIGN UP">
+                          </form>
+                        
+
+                    </div>
+                </div><!-- tab-content -->
+              </div> <!-- /form -->
+            </div>
+        </div>
+    </div>
     
-    <div class="practicecontainer">
+    <div class="practicecontainer" id ="container">
 
         <div class="event">
             <div class ="eventheader">
-                <h1 style = "color: white">Profile</h1>
+                <h1 style = "color: black">Profile
+                <a href="#"><img class ="add" src="img/edit.png " onclick="toggle_visibility('box1', 'container')"></a>
+                </h1>
             </div>
             
             <div class="eventfeed">
                 <?php
-                    include 'includes/function.php';
                     $user_id = $_SESSION['u_id'];
                     getProfilePage($user_id);
                 ?>
@@ -170,7 +427,7 @@
     <!-- Footer -->
     <footer>
       <div class="container text-center">
-        <p>Copyright &copy; Your Website 2018</p>
+        <p>Copyright &copy; College Event Manager 2018</p>
       </div>
     </footer>
 

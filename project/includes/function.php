@@ -34,21 +34,21 @@ function getProfilePage($user_id)
         $result = mysqli_query($conn, $sql);
         $resultcheck = mysqli_num_rows($result);
         
-            echo '<p>Full Name: ' . $first . ' ' . $last . '</p>';
-        echo '<p>E-mail Address: ' . $email . '</p>';
+            echo '<p class="profile-information">Full Name: ' . $first . ' ' . $last . '</p>';
+        echo '<p class="profile-information">E-mail Address: ' . $email . '</p>';
         
         if($resultcheck == 0)
         {
-            echo '<p>University: None</p>';
+            echo '<p class="profile-information">University: None</p>';
         }
         else
         {        
             $row = mysqli_fetch_assoc($result);
             $university_name = $row['name'];
-            echo '<p>University: ' . $university_name . '</p>';
+            echo '<p class="profile-information">University: ' . $university_name . '</p>';
         }
         
-        $sql = "SELECT R.name 
+        $sql = "SELECT R.name, R.active 
         from rso R, rso_membership R1 
         WHERE R.rso_id = R1.rso_id AND R1.user_id ='$user_id'";
         
@@ -56,15 +56,22 @@ function getProfilePage($user_id)
         $resultcheck = mysqli_num_rows($result);
         
         if($resultcheck == 0)
-            echo '<p>Affiliated RSOs: None</p>';
+            echo '<p class="profile-information">Affiliated RSOs: None</p>';
         else
         {   
-            echo '<p>Affiliated RSOs: </p>';
-            echo '<ul>';
+            echo '<p class="profile-information">Affiliated RSOs: </p>';
+            echo '<ul class="profile-rso">';
             while($row = mysqli_fetch_assoc($result))
             {
                 $rso = $row['name'];
-                echo '<li>' . $rso . '</li>';
+                $rso_active = $row['active'];
+                
+                if($rso_active == 0)
+                {
+                    echo '<li>' . $rso . '<br><i>Not active</i></li>';
+                }
+                else
+                    echo '<li>' . $rso . '<br><i>Active</i></li>';
             }
             echo '</ul>';
         }
@@ -98,6 +105,33 @@ function getEvent($university_id)
     
     echo '<br>';
     echo $test;
+
+}
+
+// Used to get rso's the user is a part of
+function getUserAssociatedRSOs($user_id)
+{
+    include 'dbh.inc.php';
+    
+    $sql = "SELECT R.name 
+            FROM rso R, rso_membership M 
+            WHERE R.active = '1' AND M.rso_id = R.rso_id 
+            AND M.user_id = '$user_id'";
+    $result = mysqli_query($conn, $sql);
+    $resultcheck = mysqli_num_rows($result);
+    
+    if($resultcheck == 0)
+    {
+        return;
+    }
+    else
+    {
+        while($row= mysqli_fetch_assoc($result))
+        {
+            $rso_name = $row['name'];
+            echo '<option>' . $rso_name . '</option>';
+        }
+    }
 
 }
 
@@ -230,7 +264,7 @@ function getHomePageEventFeed($university_id, $user_id)
             ORDER BY date";
     
 
-	$result = mysqli_query($conn, $sql) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);;
+	$result = mysqli_query($conn, $sql) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
 	$resultcheck = mysqli_num_rows($result);
 
 	if($resultcheck == 0)
