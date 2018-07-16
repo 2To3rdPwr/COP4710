@@ -77,14 +77,26 @@ if(isset($_POST['register']))
                         }
                         else
                         {
+                            
                             // hash password
                             $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+                            
+                            if($resultcheck == 0)
+                            {
+                                $sql = "INSERT INTO user (firstname, lastname, email, password) VALUES ('$first', '$last', '$email', '$hashedpassword');";
+                                mysqli_query($conn, $sql)or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
+                                header("Location: ../index.php?signup=success");
+                            }
+                            else
+                            {
+                                $sql = "INSERT INTO user (firstname, lastname, email, university_id, password) VALUES ('$first', '$last', '$email', '$university_id', '$hashedpassword');";
+                                mysqli_query($conn, $sql)or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
+                                header("Location: ../index.php?signup=success");
+                            }
+                            
 
-
-                            $sql = "INSERT INTO user (firstname, lastname, email, university_id, password) VALUES ('$first', '$last', '$email', '$university_id', '$hashedpassword');";
-
-                            mysqli_query($conn, $sql);
-                            header("Location: ../index.php?signup=success");
+                            
+                            
                             exit();
                         }
                     }

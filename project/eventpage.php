@@ -104,6 +104,19 @@
             color: black;
             /*background-color:cyan;*/
         }
+        .comments
+        {
+            width: 100%;
+            height: 350px;
+            margin-top: 250px;
+            float: left;
+
+        }
+        .comment
+        {
+            float: left;
+            color: black;
+        }
         
         
 
@@ -133,6 +146,19 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
             </li>
+                          <?php
+              $permission = $_SESSION['privilege'];
+              if($permission == '1')
+              {
+                echo '<li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="admin.php">Admin</a>
+                </li>';
+              }
+              else
+              {
+                  ;
+              }
+            ?>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
             </li>
@@ -155,8 +181,14 @@
 
                   <?php
                   getEventPage();
-				  getEventComments();
+                    
                   ?>
+              <div class="comments">
+                  <p class="comment">Comments</p>
+                <?php
+                  getEventComments();
+                ?>
+              </div>
 
 
           </div>

@@ -1,12 +1,9 @@
 <?php
-                    include 'includes/function.php';
-
+    include 'includes/function.php';
     session_start();
     if(!isset($_SESSION['u_id'])){
-        
        header("Location: index.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +30,7 @@
     <link href="css/homepage.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
       
-                  <script type="text/javascript">
+            <script type="text/javascript">
         function toggle_visibility(id, container) {
             var e = document.getElementById(id);
             var container = document.getElementById(container);
@@ -84,8 +81,10 @@
         padding: 20px;
         width: 80%;
         height: 1000px;
-        padding-top: 100px;
+          padding-top: 100px;
         filter: blur(0px);
+
+            
         }
         .event
         {
@@ -93,7 +92,8 @@
         padding: 20px;
         width: 100%;
         height:800px;
-        background-color: rgba(77,77,77,0.75);
+
+                    background-color: rgba(77,77,77,0.75);
         border-radius:25px;
         }
         .eventheader
@@ -110,43 +110,124 @@
         
         .practicecontainer3
         {
-            float: right;
-            padding: 20px;
-            width: 50%;
+        float: right;
+        padding: 20px;
+        width: 50%;
             height: 435px;
-            background-color: black;
+        background-color: black;
         }
         
         .practicecontainer4
         {
-            float: right;
-            padding: 20px;
-            width: 50%;
+        float: right;
+        padding: 20px;
+        width: 50%;
             height: 435px;
-            background-color: purple;
+        background-color: purple;
         }
-        .profile-information
+                .event
+        {
+        float: left;
+        padding: 20px;
+        width: 100%;
+        height:800px;
+        background-color: rgba(77,77,77,0.75);
+        border-radius:25px;
+            overflow: auto;
+        }
+        .eventheader
+        {
+            width: 100%;
+            height:auto;
+            align-content: center;
+            margin: auto;
+            /*background-color: aquamarine*/
+        }
+        .eventfeed
+        {
+            height:auto;
+            width: auto;
+            overflow: auto;
+            border: solid black;
+            border-radius: 25px;
+            margin-bottom: 5px;
+            align-content: center;
+            
+            
+            /*background-color:white;*/
+        }
+
+        .date
+        {
+            float: left;
+            width: 15%;
+            height: 150px;
+            /*background-color: black;*/
+            padding-top: 30px;
+        }
+        .information
+        {
+            float: right;
+            width: 85%;
+            height: auto;
+            /*background-color:cyan;*/
+        }
+        
+        .headerfont
+        {
+            font-family:Cabin,'Helvetica Neue',Helvetica,Arial,sans-serif;
+            font-weight:700;
+            letter-spacing:1px;
+            text-transform:uppercase;
+            padding:7px;
+            padding-left: 50px;
+
+        }
+        .day
+        {
+            margin-bottom: -5px;
+        }
+        .eventname
+        {
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+            padding-top: 5px;
+            margin-bottom: 5px;
+        }
+        .eventlocation
         {
             color: black;
+            margin-bottom: 0px;
         }
-        .profile-rso
+        .eventdescription
         {
-            margin-top: -30px;
-            margin-left: 20px;
             color: black;
+            margin-bottom: 0px;
         }
-        .add
+        .time
+        {
+            color: black;
+            margin-bottom: 5px;
+        }
+        .icons
+        {
+            padding-right: 5px;
+        }
+                        .add
         {
             float: right;
             padding-top: 8px;
         }
-        .popupBoxWrapper
+                .popupBoxWrapper
         {
             width: 750px;
-            height: 500px;
+            height: 250px;
             margin: 250px auto; 
             text-align: Center;
             margin-top: 100px;
+
+
         }
         .background
         {
@@ -194,12 +275,11 @@
         {
             margin-bottom: -10px;
         }
-        .edit-info
+                .edit-info
         {
             height: 750px;
             overflow-y: auto;
         }
-
 
 
     </style>
@@ -224,10 +304,10 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
-                          <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
             </li>
-                          <?php
+            <?php
               $permission = $_SESSION['privilege'];
               if($permission == '1')
               {
@@ -256,68 +336,25 @@
 
     </header>
       
-             <div id ="box1" class="background">
+      <div id ="box1" class="background">
             <div class="popupBoxWrapper">
                 <div id="toggle" class="rso-form">
                     <div class="form">
                   
                     <div class="tab-content">
-                    <div id="login" class="edit-info">   
-                        <h1>Edit Profile Information</h1>
+                    <div id="login" class = "edit-info">   
+                        <h1>Create an Event</h1>
 
-                        <form id = "myForm" action="includes/edit.inc.php" method="post">
+                        <form id = "myForm" action="includes/createevent.inc.php" method="post">
                             <div class="field-wrap">
-                                <p class="rso-information">First Name</p>
-                                <?php
-                                    include_once 'includes/dbh.inc.php';
-                                    $user_id = $_SESSION['u_id'];
-                                    $sql = "SELECT firstname from user where user_id = '$user_id'";
-                                    $result = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_assoc($result);
-                                    $first = $row['firstname'];
-                                    echo '<input class="rso-form" name ="first" value ="' . $first . '" autocomplete="off"/>';
-                                ?>       
+                                <p class="rso-information">Event Name</p>
+                                <input class="rso-form" name ="name" type = "text" required autocomplete="off"/>
                             </div>
                             
-                            <div class="field-wrap">
-                                <p class="rso-information">Last Name</p>
-                                <?php
-                                    include_once 'includes/dbh.inc.php';
-                                    $user_id = $_SESSION['u_id'];
-                                    $sql = "SELECT lastname from user where user_id = '$user_id'";
-                                    $result = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_assoc($result);
-                                    $last = $row['lastname'];
-                                    echo '<input class="rso-form" name ="last" value ="' . $last . '" autocomplete="off"/>';
-                                ?>   
-                            </div>
-                            
-                            <div class="field-wrap">
-                                <p class="rso-information">E-mail</p>
-                                <?php
-                                    include_once 'includes/dbh.inc.php';
-                                    $user_id = $_SESSION['u_id'];
-                                    $sql = "SELECT email from user where user_id = '$user_id'";
-                                    $result = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_assoc($result);
-                                    $email= $row['email'];
-                                    echo '<input class="rso-form" name ="email" type="email" value ="' . $email . '" autocomplete="off"/>';
-                                ?>   
-                            </div>
-
                             <div class="field-wrap">
                                 <p class="rso-information">University</p>
-                                <?php
-                                    include_once 'includes/dbh.inc.php';
-                                    $user_id = $_SESSION['u_id'];
-                                    $sql = "SELECT U.name from university U, user U1 where U.university_id = U1.university_id AND user_id = '$user_id'";
-                                    $result = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_assoc($result);
-                                    $university_name= $row['name'];
-                                    echo '<input class="rso-form" name ="university" type="text" list ="universities" value ="' . $university_name . '" autocomplete="off"/>';
-                                ?>  
+                                <input class="rso-form" type = "text" name="university" list ="universities" required autocomplete="off"/>
                                 <datalist id="universities">
-                                    <option>Not Listed</option>
                                     <?php
                                         formatSignUpUniversity();
                                     ?>
@@ -325,13 +362,49 @@
                             </div>
                             
                             <div class="field-wrap">
-                                <p class="rso-information">Password</p>
-                                <input type="password"autocomplete="off" name="password"/>
+                                <p class="rso-information">Location</p>
+                                <input class="rso-form" type = "text" name="location" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Date</p>
+                                <input class="rso-form" type = "date" name="date" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Time</p>
+                                <input class="rso-form" type = "time" name="time" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Privacy</p>
+                                <input class="rso-form" type = "text" name="privacy" list = "privacy" required autocomplete="off"/>
+                                <datalist id="privacy">
+                                    <option disabled selected>Select Your Option</option>
+                                    <option>Public</option>
+                                    <option>Private</option>
+                                    <option>RSO</option>
+                                </datalist>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">RSO (Only if selected RSO above)</p>
+                                
+                                <input name = "rso-name" type="text" list="rso" />
+    
+                                <datalist id="rso">
+                                    <option selected>None</option>
+                                    <?php
+                                        $user_id = $_SESSION['u_id'];
+                                        getUserAssociatedRSOs($user_id);
+                                    ?>
+                                </datalist>
                             </div>
 
+
                             <div class="field-wrap">
-                                <p class="rso-information">Retype Password</p>
-                                <input type="password" autocomplete="off" name="confirm_password"/>
+                                <p class="rso-information">Description</p>
+                                <textarea class="rso-form" name ="description" type = "description" rows="2" cols="50" required></textarea>
                             </div>
                             
 
@@ -403,24 +476,24 @@
         </div>
     </div>
     
-    <div class="practicecontainer" id ="container">
+    <div id = "container" class="practicecontainer">
 
-        <div class="event">
-            <div class ="eventheader">
-                <h1 style = "color: black">Profile
-                <a href="#"><img class ="add" src="img/edit.png " onclick="toggle_visibility('box1', 'container')"></a>
-                </h1>
-            </div>
+          <div class="event">
+              <div class ="eventheader">
+                    <h1 style = "color: black">Unapproved Events           
+
+                    </h1>
+              </div>
+            <?php
+                $university_id = $_SESSION['university_id'];
+                $user_id = $_SESSION['u_id'];
+                $privilege = $_SESSION['privilege'];
+                getAdminApprovePage($university_id, $user_id, $privilege);
+
+            ?>
+              
+          </div>
             
-            <div class="eventfeed">
-                <?php
-                    $user_id = $_SESSION['u_id'];
-                    getProfilePage($user_id);
-                ?>
-
-            </div>
-        </div>
-
 
     </div>
 

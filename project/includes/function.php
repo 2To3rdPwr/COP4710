@@ -135,43 +135,6 @@ function getUserAssociatedRSOs($user_id)
 
 }
 
-//get event comments
-function getEventComments()
-{
-	include 'dbh.inc.php';
-	$event_id = $_GET['event_key'];
-	
-	$sql = "SELECT C.*
-			FROM comment C, event E
-			WHERE E.event_id = '$event_id'
-			ORDER BY C.date DESC";
-			
-	$result = mysqli_query($conn, $sql);
-	$resultcheck = mysqli_num_rows($result);
-	if($resultcheck == 0)
-	{
-		return;
-	}
-	else
-	{
-		$i = 0;
-		$commentTitle = array();
-		$commentBody = array();
-		$commentRating = array();
-		$commentDate = array();
-		while($row = mysqli_fetch_assoc($result))
-		{
-			$commentTitle[$i] = $row['title'];
-			$commentBody[$i] = $row['body'];
-			$commentRating[$i] = $row['rating'];
-			$commentDate[$i] = $row['date'];
-			echo $commentTitle[$i] . '	Rating: ' . $commentRating[$i] . ' Stars <br>';
-			echo $commentBody[$i] . '<br><br>';
-			$i++;
-		}
-	}
-}
-
 function getEventPage()
 {
     include 'dbh.inc.php';
@@ -192,90 +155,181 @@ function getEventPage()
     {
         $event_name = $row['name'];
         $event_location = $row['location'];
-        $event_description = $row['description'];    
+        $event_description = $row['description'];
+        $event_date = $row['date'];
+        $phpdate = strtotime($event_date);
+        $event_date = date( 'Y-m-d', $phpdate );
+        $time_in_12_hour_format = date("g:i a", $phpdate);
+        $dateArray = dateToChar($event_date);
+        $year = $dateArray[0];
+        $month = $dateArray[1];
+        $day = $dateArray[2];
+
+        $test = intMonthToChar($month);
     }
     echo '  <div class="eventheader"><h1>' . $event_name . '</h1></div>';
     echo '  <div class="information">
                 <p class ="eventlocation">
-                    <img class = "icons" src=img/location.png>'
+                    Location: '
                     . $event_location . 
                 '</p>
-                <p class ="time">
-                    <img class = "icons" src ="img/clock.png">
-                        at 7:00pm
+                <p style="margin-top: -25px;">
+                    Date: ' . $test .' ' . $day . ', ' . $year . '  
+
                 </p>
-                <p class = "eventdescription">'
-                . $event_description .
-                '</p>
+        <p style="margin-top: -25px;">                         Time: at ' . $time_in_12_hour_format . '</p>
+                <p style="margin-top: -25px;">
+                Description:
+                </p>
+                <p style="margin-top: -25px;">' . $event_description . '</p>
             </div>';
     
 }
 
-function getFormattedEvent()
+function getFormattedEvent($user_id)
 {
     include 'dbh.inc.php';
     $university_id = $_GET['value_key'];
     
-    $sql = "SELECT * FROM event WHERE university_id = $university_id AND rso_id IS NULL";
+    $sql = "SELECT university_id from user WHERE user_id = '$user_id'";
     $result = mysqli_query($conn, $sql);
-    $resultcheck = mysqli_num_rows($result);
+    $row = mysqli_fetch_assoc($result);
+    $user_university_id = $row['university_id'];
     
-    
-    
-    if($resultcheck == 0)
+    // if the user is a student at this university
+    if($university_id == $user_university_id)
     {
-        echo 'No Events';
-        return;
+        $sql = "SELECT * FROM event WHERE university_id = $university_id AND rso_id IS NULL AND approved =1";
+        $result = mysqli_query($conn, $sql);
+        $resultcheck = mysqli_num_rows($result);
+
+
+
+        if($resultcheck == 0)
+        {
+            echo 'No Events';
+            return;
+        }
+        else
+        {
+            while($row = mysqli_fetch_assoc($result))
+            {
+                $university_id = $row['university_id'];
+                $event_id = $row['event_id'];
+                $event_name = $row['name'];
+                $event_location = $row['location'];
+                $event_description = $row['description'];   
+                $event_date = $row['date'];
+                $phpdate = strtotime($event_date);
+                $event_date = date( 'Y-m-d', $phpdate );
+                $time_in_12_hour_format = date("g:i a", $phpdate);
+                $dateArray = dateToChar($event_date);
+                $year = $dateArray[0];
+                $month = $dateArray[1];
+                $day = $dateArray[2];
+
+                $test = intMonthToChar($month);
+
+                echo    '<a href="eventpage.php?value_key=';
+                        echo $university_id . '&event_key=' . $event_id;
+                        echo '">
+                        <div class="eventfeed">
+                        <div class="date">
+                        <h1 class = "day">';
+                echo    $day  ;          
+                echo    '</h1>';
+                echo    '<p class="headerfont">' ;
+                echo    $test . ' ' . $year ;
+                echo   '</p>
+                        </div>
+                        <div class="information">
+                            <p class ="eventname">'
+                                . $event_name .
+                            '</p>
+                            <p class ="eventlocation">
+                                <img class = "icons" src=img/location.png>'
+                                . $event_location . 
+                            '</p>
+                            <p class ="time">
+                                <img class = "icons" src ="img/clock.png">
+                                    at ' . $time_in_12_hour_format . '
+                            </p>
+                            <p class = "eventdescription">'
+                            . $event_description .
+                            '</p>
+                                </div>
+                </div>
+                </a>';            
+            }     
+        }
     }
     else
     {
-        while($row = mysqli_fetch_assoc($result))
+        $sql = "SELECT * FROM event WHERE university_id = $university_id AND rso_id IS NULL AND approved = 1 AND privacy ='0'";
+        $result = mysqli_query($conn, $sql);
+        $resultcheck = mysqli_num_rows($result);
+
+        if($resultcheck == 0)
         {
-            $university_id = $row['university_id'];
-            $event_id = $row['event_id'];
-            $event_name = $row['name'];
-            $event_location = $row['location'];
-            $event_description = $row['description'];   
+            echo 'No Events';
+            return;
+        }
+        else
+        {
+            while($row = mysqli_fetch_assoc($result))
+            {
+                $university_id = $row['university_id'];
+                $event_id = $row['event_id'];
+                $event_name = $row['name'];
+                $event_location = $row['location'];
+                $event_description = $row['description'];
+                $event_date = $row['date'];
+                $phpdate = strtotime($event_date);
+                $event_date = date( 'Y-m-d', $phpdate );
+                $event_date = date( 'Y-m-d', $phpdate );
+                $time_in_12_hour_format = date("g:i a", $phpdate);
+                $dateArray = dateToChar($event_date);
+                
+                $year = $dateArray[0];
+                $month = $dateArray[1];
+                $day = $dateArray[2];
 
-            $dateArray = dateToChar($row['date']);
-            $year = $dateArray[0];
-            $month = $dateArray[1];
-            $day = $dateArray[2];
+                $test = intMonthToChar($month);
 
-            $test = intMonthToChar($month);
-
-            echo    '<a href="eventpage.php?value_key=';
-                    echo $university_id . '&event_key=' . $event_id;
-                    echo '">
-                    <div class="eventfeed">
-                    <div class="date">
-                    <h1 class = "day">';
-            echo    $day  ;          
-            echo    '</h1>';
-            echo    '<p class="headerfont">' ;
-            echo    $test . ' ' . $year ;
-            echo   '</p>
-                    </div>
-                    <div class="information">
-                        <p class ="eventname">'
-                            . $event_name .
-                        '</p>
-                        <p class ="eventlocation">
-                            <img class = "icons" src=img/location.png>'
-                            . $event_location . 
-                        '</p>
-                        <p class ="time">
-                            <img class = "icons" src ="img/clock.png">
-                                at 7:00pm
-                        </p>
-                        <p class = "eventdescription">'
-                        . $event_description .
-                        '</p>
-                            </div>
-            </div>
-            </a>';            
-        }     
+                echo    '<a href="eventpage.php?value_key=';
+                        echo $university_id . '&event_key=' . $event_id;
+                        echo '">
+                        <div class="eventfeed">
+                        <div class="date">
+                        <h1 class = "day">';
+                echo    $day  ;          
+                echo    '</h1>';
+                echo    '<p class="headerfont">' ;
+                echo    $test . ' ' . $year ;
+                echo   '</p>
+                        </div>
+                        <div class="information">
+                            <p class ="eventname">'
+                                . $event_name .
+                            '</p>
+                            <p class ="eventlocation">
+                                <img class = "icons" src=img/location.png>'
+                                . $event_location . 
+                            '</p>
+                            <p class ="time">
+                                <img class = "icons" src ="img/clock.png">
+                                    at ' . $time_in_12_hour_format .'
+                            </p>
+                            <p class = "eventdescription">'
+                            . $event_description .
+                            '</p>
+                                </div>
+                </div>
+                </a>';            
+            }     
+        }
     }
+        
             
     
     
@@ -284,22 +338,9 @@ function getFormattedEvent()
 function getHomePageEventFeed($university_id, $user_id)
 {
     include 'dbh.inc.php';
- 	
-	$sql = "SELECT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
-            FROM event E
-            WHERE (E.approved = '1') 
-            AND (E.university_id = '$university_id') 
-            AND (E.rso_id IN (SELECT R.rso_id
-							  FROM rso_membership R
-							  WHERE user_id = '$user_id'))
-			UNION
-			SELECT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
-			FROM event E
-			WHERE (E.approved = '1') 
-			AND (E.university_id = '1')
-			AND (E.rso_id IS NULL)
-            ORDER BY date";
-			
+ 	// First part of union gets any event that is approved, apart of the user's university, and user's rso
+    // Second part of the union gets any event that at users university that is approved
+    // third gets any public event
 	$sql = "SELECT DISTINCT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
             FROM event E, user U, rso_membership M
             WHERE E.approved = '1' 
@@ -310,7 +351,7 @@ function getHomePageEventFeed($university_id, $user_id)
 				OR (E.privacy = '2'
 					AND E.rso_id = M.rso_id
 					AND M.user_id = '$user_id'))
-            ORDER BY E.date ASC";
+            ORDER BY E.date ASC";     
     
 
 	$result = mysqli_query($conn, $sql) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
@@ -331,13 +372,21 @@ function getHomePageEventFeed($university_id, $user_id)
             $event_description = $row['description'];
             $event_date = $row['date'];
             $event_approval = $row['approved'];
+            $phpdate = strtotime($event_date);
+            $event_date = date( 'Y-m-d', $phpdate );
+            $time_in_12_hour_format = date("g:i a", $phpdate);
+            $dateArray = dateToChar($event_date);
             
-            $dateArray = dateToChar($row['date']);
             $year = $dateArray[0];
             $month = $dateArray[1];
             $day = $dateArray[2];
 
             $test = intMonthToChar($month);
+            
+            $sql1 = "SELECT name FROM university WHERE university_id = $university_id";
+            $result1= mysqli_query($conn, $sql1);
+            $row = mysqli_fetch_assoc($result1);
+            $university_name = $row['name'];
             
             echo    '<a href="eventpage.php?value_key=';
             echo $university_id . '&event_key=' . $event_id;
@@ -353,7 +402,7 @@ function getHomePageEventFeed($university_id, $user_id)
                     </div>
                     <div class="information">
                         <p class ="eventname">'
-                            . $event_name .
+                        . $university_name . ' - '. $event_name .
                         '</p>
                         <p class ="eventlocation">
                             <img class = "icons" src=img/location.png>'
@@ -361,15 +410,112 @@ function getHomePageEventFeed($university_id, $user_id)
                         '</p>
                         <p class ="time">
                             <img class = "icons" src ="img/clock.png">
-                                at 7:00pm
+                                at ' . $time_in_12_hour_format . '
+                        </p>
+                        <p class = "eventdescription">'
+                        . $event_description .
+                        '</p>';
+                
+            $sql1 = "SELECT user_id FROM attendance WHERE event_id = '$event_id'";
+            $result1 = mysqli_query($conn, $sql1) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
+            $resultcheck1=mysqli_num_rows($result1);
+            if($resultcheck1 > 0)
+            {
+                echo '<p class="eventdescription"><a style = "color: red" href="includes/leaveevent.php?event_key=' . $event_id . '">Leave Event</a></p>';
+            }
+            else
+            {
+                echo '<p class="eventdescription"><a style = "color: Green" href="includes/attendevent.php?event_key=' . $event_id . '">Attend This Event</a></p>';
+            }
+            echo '</div>
+            </div>
+            </a>';    
+        }
+    }
+	
+}
+
+function getAdminApprovePage($university_id, $user_id, $privilege)
+{
+    include 'dbh.inc.php';
+
+    if($privilege != '1')
+    {
+        header("Location: homepage.php?error=notadmin");
+    }
+    else
+    {
+        $sql = "SELECT * FROM event WHERE approved = '0'";
+        $result = mysqli_query($conn, $sql) or trigger_error("Query Failed! SQL: $sql - Error: ".mysqli_error($conn), E_USER_ERROR);
+	   $resultcheck = mysqli_num_rows($result);
+
+	if($resultcheck == 0)
+    {
+        
+    }
+    else
+    {
+        while($row=mysqli_fetch_assoc($result))
+        {
+            $event_id = $row['event_id'];
+            $university_id = $row['university_id'];
+            $event_name = $row['name'];
+            $event_location = $row['location'];
+            $event_description = $row['description'];
+            $event_date = $row['date'];
+            $event_approval = $row['approved'];
+            $phpdate = strtotime($event_date);
+            $event_date = date( 'Y-m-d', $phpdate );
+            $time_in_12_hour_format = date("g:i a", $phpdate);
+            $dateArray = dateToChar($event_date);
+            
+            $year = $dateArray[0];
+            $month = $dateArray[1];
+            $day = $dateArray[2];
+
+            $test = intMonthToChar($month);
+            
+            $sql1 = "SELECT name FROM university WHERE university_id = $university_id";
+            $result1= mysqli_query($conn, $sql1);
+            $row = mysqli_fetch_assoc($result1);
+            $university_name = $row['name'];
+            
+            echo    '<a href="eventpage.php?value_key=';
+            echo $university_id . '&event_key=' . $event_id;
+            echo '">
+            <div class="eventfeed">
+            <div class="date">
+            <h1 class = "day">';
+            echo    $day  ;          
+            echo    '</h1>';
+            echo    '<p class="headerfont">' ;
+            echo    $test . ' ' . $year ;
+            echo   '</p>
+                    </div>
+                    <div class="information">
+                        <p class ="eventname">'
+                        . $university_name . ' - '. $event_name .
+                        '</p>
+                        <p class ="eventlocation">
+                            <img class = "icons" src=img/location.png>'
+                            . $event_location . 
+                        '</p>
+                        <p class ="time">
+                            <img class = "icons" src ="img/clock.png">
+                                at ' . $time_in_12_hour_format . '
                         </p>
                         <p class = "eventdescription">'
                         . $event_description .
                         '</p>
+                        <p class = "eventdescription">
+                        <a style="color:Green" href="includes/approve.php?event_key=' . $event_id . '">Approve</a>
+                        <a style="color: red" href="includes/refuse.php?event_key=' . $event_id . '">Refuse</a>                        
+                        </p>
                             </div>
             </div>
             </a>';    
         }
+    }
     }
 	
 }
@@ -399,14 +545,18 @@ function getFormattedUniversityProfile()
     }
 }
 
-function getUniversityRSO()
+function getUniversityRSO($user_id)
 {
     include 'dbh.inc.php';
     $university_id = $_GET['value_key'];
     
-    $sql = "SELECT name, description, active FROM rso WHERE university_id = '$university_id' ORDER BY active DESC, name ASC";
+    $sql = "SELECT name, description, active, rso_id FROM rso WHERE university_id = '$university_id' ORDER BY active DESC, name ASC";
     $result = mysqli_query($conn, $sql);
     $resultcheck = mysqli_num_rows($result);
+    
+    $checkUserRSO = "SELECT rso_id FROM rso_membership WHERE user_id = '$user_id'";
+    $result1 = mysqli_query($conn, $checkUserRSO);
+    $result1check =mysqli_num_rows($result1);
     
     if($resultcheck == 0)
     {
@@ -414,11 +564,14 @@ function getUniversityRSO()
     }
     else
     {
+        // loops through all rso
         while($row = mysqli_fetch_assoc($result))
         {
             $name = $row['name'];
             $description = $row['description'];
             $active = $row['active'];
+            $rso_id = $row['rso_id'];
+            $flag = 0;
             echo '  <div class="eventfeed">
                     <p class ="rso-details rso-name">'
                     . $name .
@@ -437,9 +590,25 @@ function getUniversityRSO()
                 echo 'Active';
             }
                     
-            echo  ' </p>
+            echo  '</p>';
+            // result1check returns rso_id of any rso the user is in
+            // enters if he is in one
+            
+            $sql2 = "SELECT rso_id FROM rso_membership WHERE user_id = $user_id AND rso_id = $rso_id";
+            $result2 = mysqli_query($conn, $sql2);
+            $result2check = mysqli_num_rows($result2);
+            
+            // user is in this rso
+            if($result2check > 0)
+            {
+                echo '<p class = "join-leave"><a href="includes/leaverso.php?value_key=' . $university_id . '&rso_key=' . $rso_id .'"><b>Leave RSO</b></a></p>'; 
+            }
+            else
+            {
+                echo '<p class = "join-leave"><a href="includes/joinrso.php?value_key=' . $university_id . '&rso_key=' . $rso_id .'"><b>Join RSO</b></a></p>';
+            }
 
-                    </div>';
+                    echo '</div>';
             
             
         }
@@ -536,6 +705,41 @@ function formatSignUpUniversity()
     
 }
 
+function getEventComments()
+{
+	include 'dbh.inc.php';
+	$event_id = $_GET['event_key'];
+	
+	$sql = "SELECT C.*
+			FROM comment C, event E
+			WHERE E.event_id = '$event_id'
+			ORDER BY C.date DESC";
+			
+	$result = mysqli_query($conn, $sql);
+	$resultcheck = mysqli_num_rows($result);
+	if($resultcheck == 0)
+	{
+		return;
+	}
+	else
+	{
+		$i = 0;
+		$commentTitle = array();
+		$commentBody = array();
+		$commentRating = array();
+		$commentDate = array();
+		while($row = mysqli_fetch_assoc($result))
+		{
+			$commentTitle[$i] = $row['title'];
+			$commentBody[$i] = $row['body'];
+			$commentRating[$i] = $row['rating'];
+			$commentDate[$i] = $row['date'];
+            
+			echo $commentBody[$i] . '<br><br>';
+			$i++;
+		}
+	}
+}
 
 
 

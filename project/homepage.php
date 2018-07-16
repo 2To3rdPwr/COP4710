@@ -307,6 +307,19 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="universitylist.php">University</a>
             </li>
+            <?php
+              $permission = $_SESSION['privilege'];
+              if($permission == '1')
+              {
+                echo '<li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="admin.php">Admin</a>
+                </li>';
+              }
+              else
+              {
+                  ;
+              }
+            ?>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="profile.php">Profile</a>
             </li>
