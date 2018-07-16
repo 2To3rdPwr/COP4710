@@ -135,6 +135,41 @@ function getUserAssociatedRSOs($user_id)
 
 }
 
+function getEventComments()
+{
+	include 'dbh.inc.php';
+	$event_id = $_GET['event_key'];
+	
+	$sql = "SELECT C.*
+			FROM comment C, event E
+			WHERE E.event_id = '$event_id'
+			ORDER BY C.date DESC";
+			
+	$result = mysqli_query($conn, $sql);
+	$resultcheck = mysqli_num_rows($result);
+	if($resultcheck == 0)
+	{
+		return;
+	}
+	else
+	{
+		$i = 0;
+		$commentTitle = array();
+		$commentBody = array();
+		$commentRating = array();
+		$commentDate = array();
+		while($row = mysqli_fetch_assoc($result))
+		{
+			$commentTitle[$i] = $row['title'];
+			$commentBody[$i] = $row['body'];
+			$commentRating[$i] = $row['rating'];
+			$commentDate[$i] = $row['date'];
+            
+			echo $commentBody[$i] . '<br><br>';
+			$i++;
+		}
+	}
+}
 function getEventPage()
 {
     include 'dbh.inc.php';
@@ -338,9 +373,6 @@ function getFormattedEvent($user_id)
 function getHomePageEventFeed($university_id, $user_id)
 {
     include 'dbh.inc.php';
- 	// First part of union gets any event that is approved, apart of the user's university, and user's rso
-    // Second part of the union gets any event that at users university that is approved
-    // third gets any public event
 	$sql = "SELECT DISTINCT E.event_id, E.university_id, E.name, E.location, E.description, E.date, E.approved 
             FROM event E, user U, rso_membership M
             WHERE E.approved = '1' 
@@ -705,41 +737,7 @@ function formatSignUpUniversity()
     
 }
 
-function getEventComments()
-{
-	include 'dbh.inc.php';
-	$event_id = $_GET['event_key'];
-	
-	$sql = "SELECT C.*
-			FROM comment C, event E
-			WHERE E.event_id = '$event_id'
-			ORDER BY C.date DESC";
-			
-	$result = mysqli_query($conn, $sql);
-	$resultcheck = mysqli_num_rows($result);
-	if($resultcheck == 0)
-	{
-		return;
-	}
-	else
-	{
-		$i = 0;
-		$commentTitle = array();
-		$commentBody = array();
-		$commentRating = array();
-		$commentDate = array();
-		while($row = mysqli_fetch_assoc($result))
-		{
-			$commentTitle[$i] = $row['title'];
-			$commentBody[$i] = $row['body'];
-			$commentRating[$i] = $row['rating'];
-			$commentDate[$i] = $row['date'];
-            
-			echo $commentBody[$i] . '<br><br>';
-			$i++;
-		}
-	}
-}
+
 
 
 
