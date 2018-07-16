@@ -289,6 +289,13 @@
         {
             background-color: white;
         }
+        .join-leave
+        {
+            float: right;
+            margin-top: -75px;
+            margin-right: 15px;
+            
+        }
 
 
     </style>
@@ -338,7 +345,8 @@
                 <h1>University Events</h1>
             </div>
             <?php
-                getFormattedEvent();
+                $user_id = $_SESSION['u_id'];
+                getFormattedEvent($user_id);
             ?>
         
         </div>
@@ -363,7 +371,8 @@
 
                 </h1>
                     <?php
-                        getUniversityRSO();
+                        $user_id = $_SESSION['u_id'];
+                        getUniversityRSO($user_id);
                     ?>
                 
             </div>

@@ -62,13 +62,14 @@
         width: 100%;
         height:800px;
 
-                    background-color: rgba(77,77,77,0.75);
+        background-color: rgba(77,77,77,0.75);
         border-radius:25px;
         }
         .eventheader
         {
             width: 100%;
             height:auto;
+            color: black;
 
         }
         .eventfeed
@@ -97,9 +98,10 @@
         }
                 .information
         {
-            float: right;
+            float: left;
             width: 85%;
             height: auto;
+            color: black;
             /*background-color:cyan;*/
         }
         

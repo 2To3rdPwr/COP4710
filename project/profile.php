@@ -86,9 +86,6 @@
         height: 1000px;
         padding-top: 100px;
         filter: blur(0px);
-        
-
-            
         }
         .event
         {
@@ -96,8 +93,7 @@
         padding: 20px;
         width: 100%;
         height:800px;
-
-                    background-color: rgba(77,77,77,0.75);
+        background-color: rgba(77,77,77,0.75);
         border-radius:25px;
         }
         .eventheader
@@ -114,20 +110,20 @@
         
         .practicecontainer3
         {
-        float: right;
-        padding: 20px;
-        width: 50%;
+            float: right;
+            padding: 20px;
+            width: 50%;
             height: 435px;
-        background-color: black;
+            background-color: black;
         }
         
         .practicecontainer4
         {
-        float: right;
-        padding: 20px;
-        width: 50%;
+            float: right;
+            padding: 20px;
+            width: 50%;
             height: 435px;
-        background-color: purple;
+            background-color: purple;
         }
         .profile-information
         {
@@ -151,8 +147,6 @@
             margin: 250px auto; 
             text-align: Center;
             margin-top: 100px;
-
-
         }
         .background
         {

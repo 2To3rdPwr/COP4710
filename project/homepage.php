@@ -275,6 +275,11 @@
         {
             margin-bottom: -10px;
         }
+                .edit-info
+        {
+            height: 750px;
+            overflow-y: auto;
+        }
 
 
     </style>
@@ -324,10 +329,10 @@
                     <div class="form">
                   
                     <div class="tab-content">
-                    <div id="login">   
+                    <div id="login" class = "edit-info">   
                         <h1>Create an Event</h1>
 
-                        <form id = "myForm" action="includes/createuniversity.inc.php" method="post">
+                        <form id = "myForm" action="includes/createevent.inc.php" method="post">
                             <div class="field-wrap">
                                 <p class="rso-information">Event Name</p>
                                 <input class="rso-form" name ="name" type = "text" required autocomplete="off"/>
@@ -335,7 +340,12 @@
                             
                             <div class="field-wrap">
                                 <p class="rso-information">University</p>
-                                <input class="rso-form" type = "text" name="university" required autocomplete="off"/>
+                                <input class="rso-form" type = "text" name="university" list ="universities" required autocomplete="off"/>
+                                <datalist id="universities">
+                                    <?php
+                                        formatSignUpUniversity();
+                                    ?>
+                                </datalist>
                             </div>
                             
                             <div class="field-wrap">
@@ -345,11 +355,27 @@
                             
                             <div class="field-wrap">
                                 <p class="rso-information">Date</p>
-                                <input class="rso-form" type = "date" name="location" required autocomplete="off"/>
+                                <input class="rso-form" type = "date" name="date" required autocomplete="off"/>
                             </div>
                             
                             <div class="field-wrap">
-                                <p class="rso-information">RSO (Optional)</p>
+                                <p class="rso-information">Time</p>
+                                <input class="rso-form" type = "time" name="time" required autocomplete="off"/>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">Privacy</p>
+                                <input class="rso-form" type = "text" name="privacy" list = "privacy" required autocomplete="off"/>
+                                <datalist id="privacy">
+                                    <option disabled selected>Select Your Option</option>
+                                    <option>Public</option>
+                                    <option>Private</option>
+                                    <option>RSO</option>
+                                </datalist>
+                            </div>
+                            
+                            <div class="field-wrap">
+                                <p class="rso-information">RSO (Only if selected RSO above)</p>
                                 
                                 <input name = "rso-name" type="text" list="rso" />
     
@@ -369,7 +395,7 @@
                             </div>
                             
 
-                            <input class = "button button-block" type="submit" name = "university-submit" value = "SUBMIT">
+                            <input class = "button button-block" type="submit" name = "submit" value = "SUBMIT">
                         </form>
                     </div>
                     <?php
@@ -441,8 +467,10 @@
 
           <div class="event">
               <div class ="eventheader">
-                    <h1 style = "color: black">Upcoming Events                           <a id="test" href="javascript:void(0)"
-                            onclick="toggle_visibility('box1', 'container');"><img src="img/add.png" class="add"></a></h1>
+                    <h1 style = "color: black">Upcoming Events            
+                        <a id="test" href="javascript:void(0)"
+                        onclick="toggle_visibility('box1', 'container');"><img src="img/add.png" class="add"></a>
+                    </h1>
               </div>
             <?php
                 $university_id = $_SESSION['university_id'];
